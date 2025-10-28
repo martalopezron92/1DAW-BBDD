@@ -139,6 +139,5 @@ Tu sistema debe poder responder eficientemente a preguntas como:
 
 - Plantillas de documentación disponibles en aula virtual
 - Ejemplos de diagramas en material complementario
-- Horario de consultas: [Especificar horario]
 
 **¡Éxito en vuestro proyecto!**

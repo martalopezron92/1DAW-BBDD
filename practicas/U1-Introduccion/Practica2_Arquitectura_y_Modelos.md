@@ -106,4 +106,3 @@ VISTA_RECEPCION:
 - Documento con diagramas y esquemas claros
 - Respuestas justificadas
 - Formato PDF o Word
-- Fecha límite: [A definir por el profesor]

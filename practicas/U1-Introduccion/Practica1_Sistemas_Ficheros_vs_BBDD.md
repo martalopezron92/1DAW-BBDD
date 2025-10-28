@@ -75,4 +75,3 @@ La biblioteca del instituto "San Ignacio" quiere informatizar su sistema de gest
 - Documento en formato PDF o Word
 - Respuestas claras y bien estructuradas
 - Máximo 8 páginas
-- Fecha límite: [A definir por el profesor]

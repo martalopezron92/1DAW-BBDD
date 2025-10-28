@@ -14,17 +14,17 @@ En esta unidad el alumno conocerá la necesidad de las empresas de gestionar y a
 
 Conocerá también la arquitectura y estructura interna de un sistema de gestión de base de datos, así como a distinguir entre el esquema interno, el esquema conceptual y los esquemas externos.
 
-**1.** **INTRODUCCIÓN**
+**1.INTRODUCCIÓN**
 
-2. LA **INFORMACIÓN Y SU ALMACENAMIENTO**
+**2.LA INFORMACIÓN Y SU ALMACENAMIENTO**
 
-# 3. SISTEMAS GESTORES DE FICHEROS
+**3.SISTEMAS GESTORES DE FICHEROS**
 
-**4.** **S.G.B.D.**
+**4.S.G.B.D.**
 
-5. ARQUITECTURA DE UNA BASE **DE** **DATOS**
+**5.ARQUITECTURA DE UNA BASE DE DATOS**
 
-6. COMPONENTES DE UN **SGBD**
+**6.COMPONENTES DE UN SGBD**
 
 <!-- 1 -->
 
@@ -42,13 +42,13 @@ Conocerá también la arquitectura y estructura interna de un sistema de gestió
 
 Para empezar con el tema, vamos a plantear unas preguntas para poder introducir los conceptos más importantes de la asignatura:
 
-¿Qué entiendes por Bases de Datos?
+* ¿Qué entiendes por Bases de Datos?
 
-Conoces algún Sistema Gestor de Bases de Datos?
+* ¿Conoces algún Sistema Gestor de Bases de Datos?
 
-¿Has trabajado con Bases de Datos o has oído sobre ellas?
+* ¿Has trabajado con Bases de Datos o has oído sobre ellas?
 
-Consideras importante aprender a trabajar con Bases de Datos?
+* ¿Consideras importante aprender a trabajar con Bases de Datos?
 
 ## 1.2. LA INFORMACIÓN Y SU ALMACENAMIENTO
 
@@ -87,18 +87,19 @@ Un Sistema Gestor de Ficheros es un sistema de almacenamiento de la información
 Un ejemplo de uso de archivos sería el fichero con todos los datos de los clientes de un banco, es decir, el conjunto de registros de clientes de un banco almacenados en un dispositivo de memoria secundaria. Hemos de resaltar que los datos están almacenados de tal forma que se puedan añadir, suprimir, actualizar o consultar datos individuales en cualquier momento.
 
 
-| Nombre del archivo: CLIENTES<br>Campo clave: NIF<br>Formato del registro: | Nombre del archivo: CLIENTES<br>Campo clave: NIF<br>Formato del registro: | Nombre del archivo: CLIENTES<br>Campo clave: NIF<br>Formato del registro: | Nombre del archivo: CLIENTES<br>Campo clave: NIF<br>Formato del registro: |
+| Nombre del archivo: CLIENTES<br>Campo clave: NIF<br>Formato del registro: |  |  | |
 | --- | --- | --- | --- |
 | Campo  | Nombre  | Tipo de datos  | Longitud  |
-| 1<br>2<br>3  | NIF  | Alfanumérico | 10  |
-| 1<br>2<br>3  | APELLIDOS  | Alfanumérico | 20  |
-| 1<br>2<br>3  | NOMBRE  | Alfanumérico | 15  |
+| 1 | NIF  | Alfanumérico | 10  |
+| 2 | APELLIDOS  | Alfanumérico | 20  |
+| 3 | NOMBRE  | Alfanumérico | 15  |
 | 4  | NACIMIENTO  | Fecha  | 8  |
 
 
 Introducimos mediante ejemplos las diferencias en los modos de trabajar entre un sistema de gestión de ficheros y un sistema de bases de datos.
 
 ### Ejemplo 1:
+---
 
 En un centro educativo se quieren mecanizar mediante ordenador los siguientes procesos: (a) Emisión mensual de recibos y (b) Actas de notas
 
@@ -136,9 +137,11 @@ En una concepción clásica de la solución del problema se crearían dos ficher
 
 <!-- **Sección de Formación Profesional** CADIZ -->
 
-### &Qué defectos se observan en esta organización de los datos?
+### ¿Qué defectos se observan en esta organización de los datos?
+---
 
-1°. Campos repetidos (se multiplican así las necesidades de espacio)
+
+**1°. Campos repetidos** (se multiplican así las necesidades de espacio)
 
 Nombre del alumno (está duplicado: aparece en ambos ficheros)
 
@@ -146,15 +149,16 @@ Precio de la asignatura (aparece repetido en cada registro del 1° fichero)
 
 Nombre de la asignatura (aparece repetido en cada registro, en ambos ficheros)
 
-### 2°. Dificultades para la actualización de los datos (se invierte más tiempo).
+**2°. Dificultades para la actualización de los datos** (se invierte más tiempo).
 
 Un mismo dato que figura en muchos ficheros deberá actualizarse en todos y cada uno de esos ficheros.
 
-# 3°. Inconsistencia de datos.
+**3°. Inconsistencia de datos**
 
 Ocurre cuando, por error, se actualiza un dato en unos ficheros sí y en otros no.
 
-# ;Cómo organizaríamos los ficheros para evitar estos problemas?
+### ¿Cómo organizaríamos los ficheros para evitar estos problemas?
+---
 
 
 | Fichero ALUMNOS  |
@@ -183,7 +187,8 @@ Si queremos modificar el nombre de un alumno o de una asignatura **solo** **nece
 
 Este diseño se ha hecho teniendo en cuenta las relaciones entre los datos y no la utilización de ellos en un caso particular. Se sigue así un principio básico de los Sistemas de Gestión de Bases de Datos que consiste en crear estructuras independientes de los programas en que se vayan a usar los datos.
 
-## Ejemplo 2:
+### Ejemplo 2:
+---
 
 Considérese una empresa bancaria que guarda la información referente a sus clientes y sus respectivas cuentas de ahorro en archivos.
 
@@ -201,23 +206,20 @@ Además, el sistema tiene diversos programas de aplicación que permiten, tanto 
 
 <!-- **Sección** de **Formación Profesional** CADIZ -->
 
-·Un programa para hacer cargos o abonos a una cuenta.
-
-Un programa para añadir una nueva cuenta.
-
-Un programa para obtener el saldo de una cuenta.
-
-·Un programa para generar estados mensuales.
+* Un programa para hacer cargos o abonos a una cuenta.
+* Un programa para añadir una nueva cuenta.
+* Un programa para obtener el saldo de una cuenta.
+* Un programa para generar estados mensuales.
 
 Estos programas de aplicación los han escrito programadores en respuesta a las necesidades de la organización bancaria.
 
 Los registros se almacenan en varios archivos, y se escribe un número de diferentes programas de aplicación para consultar, añadir, borrar o modificar registros de los archivos apropiados. Este sistema tiene un número de **desventajas** importante.
 
-# 1°. Redundancia e inconsistencia de los datos.
+### 1. Redundancia e inconsistencia de los datos.
 
 Puesto que los archivos y los programas de aplicación son creados por distintos programadores durante un periodo de tiempo, es probable que los archivos tengan diferentes formatos y los datos pueden estar duplicados en varios sitios (archivos). Por ejemplo, la dirección y el $^{o}$ de teléfono de un cliente determinado pueden aparecer en un archivo qule contiene registros de “cuentas nómina” y en un archivo que contiene registros de cuentas de “planes de pensiones”. **Esta** **redundancia** **aumenta** **los** **costes** **de almacenamiento y acceso.** Además, pulede llevar a **inconsistencia de los datos,** esto es, las diversas copias de los mismos datos no concuerdan entre sí. Por ejemplo, una dirección cambiada de un cliente puede estar reflejada en los registros de cuentas de ahorros pero no en otro sitio del sistema.
 
-# 2°. Dificultad para tener acceso a los datos.
+### 2. Dificultad para tener acceso a los datos.
 
 Supóngase que uno de los gerentes del banco necesita averiguar los nombres de todos los clientes cuyo código postal sea 11567 y pide al departamento de procesamiento de datos que genere la lista correspondiente.
 
@@ -237,11 +239,11 @@ Obviamente, ninguna de las dos alternativas es satisfactoria. Imaginemos que se 
 
 <!-- **Sección** de **Formación Profesional** CADIZ -->
 
-# 3°.Aislamiento de los datos.
+### 3. Aislamiento de los datos.
 
 Puesto que los datos están repartidos en varios archivos, y éstos pueden tener diferentes formatos, es dificil escribir nuevos programas de aplicación para obtener los datos apropiados. Además, si se han utilizado diferentes lenguajes de programación para crear esos archivos, lo más probable es que sus formatos sean incompatibles.
 
-# 4°.Anomalías del acceso concurrente.
+### 4. Anomalías del acceso concurrente.
 
 Para mejorar el funcionamiento global del sistema y obtener un tiempo de respuesta más rápido, muchos sistemas permiten que múltiples usuarios actualicen los datos simultáneamente. En un entorno así, la interacción de actualizaciones concurrentes puede dar por resultado datos inconsistentes.
 
@@ -249,11 +251,11 @@ Considérese una cuenta bancaria con 500 euros. Si dos clientes autorizados a ma
 
 En particular, la cuenta puede contener 450 ó 400 euros, en vez de 350 euros. Para prevenir esta posibilidad, debe mantenerse alguna forma de supervisión en el sistema. Cuando se da una situación similar a la expuesta en el anterior ejemplo, donde se puede acceder a los datos por medio de diversos programas de aplicación que no han sido previamente coordinados, esta verificación es muy dificil de proporcionar.
 
-# 5°. Problemas de seguridad.
+# 5. Problemas de seguridad.
 
 No todos los usuarios del sistema de gestión informático deben poder acceder a todos los datos. Por ejemplo, en un sistema de gestión de un centro educativo cada profesor sólo debe poder acceder a las notas de sus alumnos, y por otra parte, cada alumno podrá consultar sus notas pero no podrá modificarlas. Puesto que los programas de aplicación se añaden al sistema de una forma imprecisa, es dificil implantar tales restricciones de seguridad.
 
-# 6°. Problemas de integridad.
+# 6. Problemas de integridad.
 
 Los valores de datos almacenados en la base de datos deben satisfacer ciertos tipos de restricciones de consistencia. Por ejemplo, el saldo de una cuenta bancaria nunca debe caer por debajo de una cantidad prescrita (digamos, 25 euros). Estas restricciones se hacen cumplir en el sistema añadiendo códigos apropiados en los diversos programas de aplicación. Sin embargo, cuando se añaden restricciones nuevas es difícil cambiar los programas para hacerlas cumplir. El problema se complica aún más cuando las restricciones implican varios elementos de información de distintos archivos.
 
@@ -269,7 +271,7 @@ Los valores de datos almacenados en la base de datos deben satisfacer ciertos ti
 
 <!-- **Sección** de **Formación Profesional** CADIZ -->
 
-# 7°.Dependencia de los datos fisica-lógica.
+### 7. Dependencia de los datos fisica-lógica.
 
 La estructura fisica de los datos (definición de archivos y registros) se encuentra codificada en los programas de aplicación. Cualquier cambio en esa estructura implica que el programador deberá identificar, modificar y probar todos los programas que manipulan esos archivos.
 
@@ -285,7 +287,7 @@ La función del SBD es almacenar la información y tenerla disponible para la em
 
 El SBD estaría formado por:
 
-I) LOS DATOS
+### I) LOS DATOS
 
 Datos Persistentes o Fijos: Aquellos que están de manera indefinida en la BD.
 
@@ -315,23 +317,25 @@ Está compuesto por un conjunto de programas (SGBD), qque nos ayudan como interf
 
 <!-- Sección de **Formación Profesional** CADIZ -->
 
-#### Se pueden clasificar en los siguientes:
+Se pueden clasificar en los siguientes:
 
-Programadores de las aplicaciones: Conjunto de personas que hacen aplicaciones y se dedican a su mantenimiento.
+* **Programadores de las aplicaciones**: Conjunto de personas que hacen aplicaciones y se dedican a su mantenimiento.
 
-·Usuarios finales: Personas que usan la BD bien directamente (con un lenguaje de consulta) o bien mediante programas. Sólo hacen preguntas o modificaciones en los datos.
+* **Usuarios finales**: Personas que usan la BD bien directamente (con un lenguaje de consulta) o bien mediante programas. Sólo hacen preguntas o modificaciones en los datos.
 
-Administrador de Datos (DA): Donde existe una BD hay una persona o grupo de personas que lleva el control de los datos. No tiene por que saber nada de informática, y normalmente suele tener un cargo alto en la empresa, y toma la decisión de 'Que datos se van a almacenar'.
+* **Administrador de Datos (DA)**: Donde existe una BD hay una persona o grupo de personas que lleva el control de los datos. No tiene por que saber nada de informática, y normalmente suele tener un cargo alto en la empresa, y toma la decisión de 'Que datos se van a almacenar'.
 
-Administrador de la BD (DBA): Puede ser una o varias personas. Se encarga del control y la administración de la BD. Decide como almacenar los datos que le diga el Administrador de Datos
+* **Administrador de la BD (DBA)**: Puede ser una o varias personas. Se encarga del control y la administración de la BD. Decide como almacenar los datos que le diga el Administrador de Datos
 
-#### Ventajas del enfoque de la BD:
 
-# 1. Independencia de los datos respecto de las aplicaciones
+### VENTAJAS DE LAS BBDD
+---
+
+#### 1. Independencia de los datos respecto de las aplicaciones
 
 El usuario tiene una visión abstracta de los datos, sin necesidad de ningún conocimiento sobre la implementación de los ficheros de datos, índices, etc. Esto supone un gran ahorro en los costes de programación, de forma que la modificación de la estructura de los datos no suponga un cambio en los programas y viceversa. Sin ella, el mantenimiento de la base de datos ocuparía el 50% de los recursos humanos dedicados al desarrollo de cualquier aplicación.
 
-# 2.Disminuye la redundancia de los datos.
+#### 2.Disminuye la redundancia de los datos.
 
 Seguramente pensáis que el problema de la redundancia es el espacio perdido. Antiguamente, cuando el precio del byte de disco era muy elevado, esto era un problema grave, pero actualmente prácticamente nunca lo es. &Qué problema hay entonces? Simplemente, lo que todos hemos sufrido más de unavez: si tenemos algo apuntado en dos lugares diferentes no pasará demasiado tiempo hasta que las dos anotaciones dejen de ser coherentes, porque habremos modificado la anotación en uno de los lugares y nos habremos olvidado de hacerlo en el otro.
 
@@ -339,7 +343,7 @@ Así pues, el verdadero problema es el grave riesgo de inconsistencia o incohere
 
 Por lo tanto, convendría evitar la redundancia. En principio, nos conviene hacer que un dato figure una vez en la BD. Sin embargo, esto no siempre será cierto. Por ejemplo, el disponer de réplicas de los datos por razones de fiabilidad, disponibilidad o coste de comunicaciones.
 
-# 3.Mayor integridad de datos
+#### 3.Mayor integridad de datos
 
 <!-- 8 -->
 
@@ -361,21 +365,24 @@ En caso de errores o desastres, también podríamos perder la integridad de los 
 
 Cuando el SGBD detecte que un programa quiere hacer una operación que va contra las reglas establecidas al definir la BD, no se lo deberá permitir, y le tendrá que devolver un estado de error.
 
-4. Mayor disponibilidad de datos: Permite recuperar las bases de datos en caso de que ocurra algún suceso imprevisto que afecte o destruya la base de datos.
+#### 4. Mayor disponibilidad de datos.
+Permite recuperar las bases de datos en caso de que ocurra algún suceso imprevisto que afecte o destruya la base de datos.
 
-5. Compartición de datos: Los datos deben poder ser accedidos por varios usuarios simultáneamente, teniendo previstos procedimientos para salvaguardar la integridad de los mismos.
+#### 5. Compartición de datos
+Los datos deben poder ser accedidos por varios usuarios simultáneamente, teniendo previstos procedimientos para salvaguardar la integridad de los mismos.
 
 Actualmente ya no son raros los Sistemas de Información que tienen, en un instante determinado, miles de sesiones de usuario abiertas simultáneamente. Solo hace falta pensar en los típicos sistemas de los consorcios de compañías aéreas o casos similares, e incluso en los servidores de páginas web.
 
-# 6.Mayor seguridad de los datos
+#### 6.Mayor seguridad de los datos
 
 Los SGBD permiten definir autorizaciones o derechos de acceso a diferentes niveles. Estos mecanismos de seguridad requieren que el usuario se pueda identificar. Se acostumbra a utilizar códigos de usuarios acompañados de contraseñas, pero también se usan tarjetas magnéticas, reconocimiento de voz,etc.
 
-## Desventajas del enfoque de la BD:
+### DESVENTAJAS DE LAS BBDD
+---
 
 Bueno, viendo el punto anterior podríamos hacernos la siguiente pregunta:
 
-Con todas las ventajas que tiene el usar sistemas de bases de datos frente a sistemas de archivos, ¿por qué utilizar estos últimos?
+**Con todas las ventajas que tiene el usar sistemas de bases de datos frente a sistemas de archivos, ¿por qué utilizar estos últimos?**
 
 Pues la contestación es que hasta ahora no existe nada perfecto en informática, y el uso de los sistemas de bases de datos tiene también sus desventajas que pasamos a analizar.
 
@@ -391,23 +398,23 @@ Pues la contestación es que hasta ahora no existe nada perfecto en informática
 
 <!-- **Sección de Formación Profesional** CADIZ -->
 
-## Podríamos destacar las siguientes:
+Podríamos destacar las siguientes:
 
-## Desventajas relativas a la implantación:
+#### Desventajas relativas a la implantación:
 
-·Instalación costosa en equipos y software.
+* Instalación costosa en equipos y software.
 
-·Instalación larga y dificil.
+* Instalación larga y dificil.
 
-·Falta de rentabilidad a corto plazo.
+* Falta de rentabilidad a corto plazo.
 
-## Desventajas relativas a los usuarios:
+#### Desventajas relativas a los usuarios:
 
-·Necesidad de formación de un personal especializado.
+* Necesidad de formación de un personal especializado.
 
 Entonces, ¿cuándo usar un sistema de archivos y cuando un sistema de bases de datos a la hora de plantearnos una aplicación?
 
-Generalizando, usaremos el sistema de archivos cuando la cantidad de datos a guardar sea tan reducida que no justifique las ventajas del uso de los sistemas de bases de datos.
+Generalizando, **usaremos el sistema de archivos cuando la cantidad de datos a guardar sea tan reducida que no justifique las ventajas del uso de los sistemas de bases de datos**.
 
 Un ejemplo típico sería realizar una aplicación de agenda en la cual sólo hay que guardar campos de texto ordenados por hora, día, mes y año. Aquí no sería recomendable el uso de un SGBD.
 
@@ -417,9 +424,9 @@ Uno de los objetivos de un sistema de base de datos es proporcionar una visión 
 
 La arquitectura más estándar y, por tanto, la más utilizada, es la que hace una división en niveles de la base de datos. Se consideran tres niveles según la perspectiva desde la que sea vista la información.
 
-**·Nivel** **interno.** Es la representación del nivel más bajo de abstracción. Se especifican los archivos que contienen la información, su organización,la forma de acceder a los registros, el tipo y longitud del registro, los campos que lo componen, los campos clave, etc, es decir, como la información es almacenada en los dispositivos de almacenamiento.
+* **Nivel interno.** Es la representación del nivel más bajo de abstracción. Se especifican los archivos que contienen la información, su organización,la forma de acceder a los registros, el tipo y longitud del registro, los campos que lo componen, los campos clave, etc, es decir, como la información es almacenada en los dispositivos de almacenamiento.
 
-**·Nivel** **conceptual.** Es la visión o representación del problema tal y como éste se presenta en el mundo real. Describe qué datos son almacenados realmente en la base de datos y las relaciones que existen entre los mismos. Se obtiene a partir de los requerimientos de los usuarios potenciales del sistema de base de datos a implantar, sin importar la forma ni el lugar en el que se almacenarán y recuperarán los datos. Contiene los datos elementales (campos), los datos compuestos (registros), las relaciones entre campos elementales y compuestos, las reglas que rigen el funcionamiento de la empresa,etc. Esta visión no cambia al menos que cambie la naturaleza del problema.
+* **Nivel conceptual.** Es la visión o representación del problema tal y como éste se presenta en el mundo real. Describe qué datos son almacenados realmente en la base de datos y las relaciones que existen entre los mismos. Se obtiene a partir de los requerimientos de los usuarios potenciales del sistema de base de datos a implantar, sin importar la forma ni el lugar en el que se almacenarán y recuperarán los datos. Contiene los datos elementales (campos), los datos compuestos (registros), las relaciones entre campos elementales y compuestos, las reglas que rigen el funcionamiento de la empresa,etc. Esta visión no cambia al menos que cambie la naturaleza del problema.
 
 <!-- 10 -->
 
@@ -433,40 +440,41 @@ La arquitectura más estándar y, por tanto, la más utilizada, es la que hace u
 
 <!-- **Sección de Formación Profesional** CADIZ -->
 
-**·** **Niveles** **externos.** Son el conjunto de percepciones individuales de la base de datos. Cada visión individual se denomina subesquema o vista. Un subesquema podrá ser compartido por varios usuarios, y cada usuario tendrá la posibilidad de acceder a distintos subesquemas. Al crear un subesquema, es posible mezclar campos de distintos registros, omitir campos, cambiar el orden de los campos, añadir campos que puedan ser calculados a partir de los descritos en el esquema conceptual, etc.
+* **Niveles externos.** Son el conjunto de percepciones individuales de la base de datos. Cada visión individual se denomina subesquema o vista. Un subesquema podrá ser compartido por varios usuarios, y cada usuario tendrá la posibilidad de acceder a distintos subesquemas. Al crear un subesquema, es posible mezclar campos de distintos registros, omitir campos, cambiar el orden de los campos, añadir campos que puedan ser calculados a partir de los descritos en el esquema conceptual, etc.
 
 Estas “visiones particulares" de los usuarios son proporcionadas por los procedimientos o programas de aplicación que sólo manejan parte de la información de la base de datos.
 
-### ESQUEMA EXTERNO
+### Ejemplo 3:
+---
 
-Subesquema 1:
+#### ESQUEMA EXTERNO
+**Subesquema 1**:
 
 ALUMNOS CON UNA EDAD DETERMINADA: ALDNI, ALEDAD
 
-Subesquema 2:
+**Subesquema 2**:
 
 ASIGNATURAS APROBADAS POR UN ALUMNO : ALDNI, ASIGNUM, NOTA
 
-### ESQUEMA CONCEPTUAL
+#### ESQUEMA CONCEPTUAL
 
-ALUMNOS: ALDNI,ALNOM,ALAPELL,...
+**ALUMNOS:** ALDNI,ALNOM,ALAPELL,...
 
-ASIGNATURAS : ASIGNUM, ASIGNOM, ASIGHORAS
+**ASIGNATURAS :** ASIGNUM, ASIGNOM, ASIGHORAS
 
-NOTAS: ALDNI, ASIGNUM, NOTA, FECHA
+**NOTAS:** ALDNI, ASIGNUM, NOTA, FECHA
 
 Reglas:
 
 1. Un alumno tiene exactamente ocho asignaturas.
-
 2. No puede haber más de treinta alumnos por asignatura
+3. ...
 
-3......
+#### ESQUEMA INTERNO
 
 
-| ESQUEMA INTERNO  | ESQUEMA INTERNO  | ESQUEMA INTERNO  | ESQUEMA INTERNO  | ESQUEMA INTERNO  | ESQUEMA INTERNO  |
+| ARCHIV  | ORGANIZ.  | CLAVE  | LONG.REG.  | CAMPOS |TIPODATOS   
 | --- | --- | --- | --- | --- | --- |
-| ARCHIV  | ORGANIZ.  | CLAVE  | LONG.REG.  | CAMPOS TIPODATOS  | CAMPOS TIPODATOS  |
 | Alumnos  | Indexada  | ALDNI  | 70  | ALDNI<br>ALNOM<br>ALAPELL  | X(9)<br>X(15)<br>X(20)  |
 
 
@@ -483,16 +491,17 @@ Reglas:
 <!-- Sección de **Formación Profesional** CADIZ -->
 
 ### Independencia de los datos
+---
 
 Es la capacidad para modificar el esquema de un nivel del sistema de la base de datos sin tener que modificar el esquema del nivel inmediato superior.
 
 Podemos de definir dos tipos de independencia de los datos:
 
-Independencia lógica
+* Independencia lógica
 
-Independencia fisica
+* Independencia fisica
 
-### Independencia lógica de los datos
+### 1. Independencia lógica de los datos
 
 Entendemos por independencia lógica de datos que:
 
@@ -506,13 +515,14 @@ Esta modificación en el esquema conceptual no deberá afectar a los esquemas ex
 
 Por ejemplo, el hecho de suprimir el atributo fecha de nacimiento de la entidad alumno y añaddir otra entidad aula no debería afectar a ninguno de los programas existentes que no utilicen el atributo fecha de nacimiento.
 
-### Otros ejemplos:
+#### Otros ejemplos:
+---
 
 1) El personal administrativo de secretaría podría tener una visión de la entidad alumno sin que fuese necesario que existiese el atributo nota. Sin embargo, los usuarios profesores (o los programas dirigidos a ellos) podrían tener una visión en la que existiese el atributo nota pero no el atributo fecha de pago.
 
 2) Decidimos ampliar la longitud del atributo nombre y lo aumentamos de treinta a cincuenta caracteres, pero no sería necesario modificar los programas que ya tenemos escritos si no nos importa que los valores obtenidos tengan sólo los primeros treinta caracteres del nombre.
 
-### Independencia física de los datos
+### 2. Independencia física de los datos
 
 Por independencia física de los datos entendemos que:
 
@@ -530,7 +540,8 @@ El esquema lógico no se ve afectado por cambios realizados en el esquema intern
 
 <!-- **Sección de Formación Profesional** CADIZ -->
 
-Un ejemplo:
+#### Un ejemplo:
+---
 
 Puede ser necesario modificarel esquema interno de los datos por la necesidad de reorganizar ciertos ficheros fisicos (por ejemplo, al crear estructuras de datos adicionales) con el fin de mejorar el rendimiento de las operaciones de recuperación y actualización. Si la base de datos contiene aún los mismos datos, no será necesario modificar el esquema conceptual.
 
@@ -542,21 +553,21 @@ El SGBD está dividido en módulos que llevan a cabo sus funciones asociadas. Se
 
 1) **Núcleo:** Es el conjunto de programas que coordinan y controlan el funcionamiento del SGBD. Son programas transparentes al usuario.
 
-· Controlan la integridad y seguridad.
+* Controlan la integridad y seguridad.
 
-· Implementan las funciones de comunicación entre niveles.
+* Implementan las funciones de comunicación entre niveles.
 
-· Facilitan la independencia de los datos.
+* Facilitan la independencia de los datos.
 
-· Gestionan el diccionario de datos.
+* Gestionan el diccionario de datos.
 
-· Proporcionan el soporte necesario para los programas de utilidad y los lenguajes.
+* Proporcionan el soporte necesario para los programas de utilidad y los lenguajes.
 
 **2)** **Lenguajes:** El SGBD proporciona lenguajes que permiten la definición y el manejo de los datos de la base. Cada SGBD tiene una estructura y organización particular, pero todos tienen la característica común de ofrecer al administrador y a los usuarios tres lenguajes:
 
-·El lenguaje de descripción de datos (DDL) se utiliza para definir el esquema conceptual y los distintos subesquemas externos de la base de datos. Además, ofrece la posibilidad de establecer parte de la seguridad de la base de datos, permitiendo asignar derechos sobre las operaciones que pueden realizar los usuarios.
+* **El lenguaje de descripción de datos (DDL)** se utiliza para definir el esquema conceptual y los distintos subesquemas externos de la base de datos. Además, ofrece la posibilidad de establecer parte de la seguridad de la base de datos, permitiendo asignar derechos sobre las operaciones que pueden realizar los usuarios.
 
-· El lenguaje de manipulación dde datos (DML) es el encargado de gestionar la información de la base de datos. Permite añadir, eliminar y modificar registros, y recuperar información de forma
+* **El lenguaje de manipulación dde datos (DML)** es el encargado de gestionar la información de la base de datos. Permite añadir, eliminar y modificar registros, y recuperar información de forma estructurada de la base de datos.
 
 <!-- 13 -->
 
@@ -570,13 +581,11 @@ El SGBD está dividido en módulos que llevan a cabo sus funciones asociadas. Se
 
 <!-- **Sección de Formación Profesional** CADIZ -->
 
-estructurada de la base de datos.
-
-·El lenguaje de control de datos (DCL) que se utiliza para conceder o revocar permisos a los distintos usuarios sobre los objetos de la base de datos
+* **El lenguaje de control de datos (DCL)* que se utiliza para conceder o revocar permisos a los distintos usuarios sobre los objetos de la base de datos
 
 **3)** **Utilidades:** Son aplicaciones que facilitan el trabajo a los usuarios y programadores. Tiene la característica común de tener un interfaz fácil de entender. Se basan en menús que guían al usuario para conseguir el objetivo final. Por ejemplo, asistentes o generador de formularios.
 
-4) **Diccionario** **de** **datos:** Es un almacén integrado en el que se almacena toda la información referente a la descripción, gestión e implantación de la base de datos. También se conoce como “catálogo del sistema”.
+**4)** **Diccionario** **de** **datos:** Es un almacén integrado en el que se almacena toda la información referente a la descripción, gestión e implantación de la base de datos. También se conoce como “catálogo del sistema”.
 
 <!-- 14 -->
 
