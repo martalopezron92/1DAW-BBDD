@@ -1,0 +1,17 @@
+# Excluir la carpeta del profesor
+profesor/
+
+# Archivos temporales del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Archivos de respaldo
+*.bak
+*.tmp
