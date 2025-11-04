@@ -74,10 +74,18 @@ c) **VISTA_ALUMNO:** Información que puede consultar un alumno
 d) **VISTA_DIRECTOR:** Información completa para toma de decisiones
 
 3.3. **Esquema Interno:**
-Para 3 tablas principales, especifica:
-- Tipo de organización de archivo
-- Índices necesarios
-- Estimación de tamaño de registros
+Para la academia, especifica:
+
+a) **¿Dónde se guardarían físicamente los datos?**
+   - Servidor local o en la nube
+   - Un solo archivo o archivos separados por tipo de información
+
+b) **¿Cómo se harían las copias de seguridad?**
+   - Cada día, cada semana o cada mes
+   - Qué información es más importante proteger
+
+c) **¿Qué pasaría si la academia crece mucho?**
+   - Cómo se adaptaría el sistema a más alumnos y profesores
 
 ### FASE 4: COMPONENTES Y USUARIOS (20 puntos)
 
@@ -94,7 +102,7 @@ Para cada lenguaje del SGBD, proporciona 2 ejemplos de uso en la academia:
 - **DML (Data Manipulation Language):**
 - **DCL (Data Control Language):**
 
-### FASE 5: IMPLEMENTACIÓN Y SEGURIDAD (BONUS - 10 puntos extra)
+<!-- ### FASE 5: IMPLEMENTACIÓN Y SEGURIDAD (BONUS - 10 puntos extra)
 
 5.1. **Plan de implementación:**
 - Orden de creación de tablas
@@ -104,7 +112,7 @@ Para cada lenguaje del SGBD, proporciona 2 ejemplos de uso en la academia:
 5.2. **Medidas de seguridad:**
 - Copias de seguridad
 - Control de acceso
-- Protección de datos personales (RGPD)
+- Protección de datos personales (RGPD) -->
 
 ## ENTREGABLES
 
