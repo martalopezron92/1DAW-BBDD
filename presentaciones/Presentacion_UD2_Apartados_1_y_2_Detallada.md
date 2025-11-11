@@ -63,20 +63,48 @@
 
 ---
 
-### 1.3. Los Tres Niveles de Abstracción
+### 1.3. Aclaración Terminológica Importante
 
-**Pregunta inicial:** ¿Cómo pasamos de la realidad a una base de datos SQL?
+**⚠️ CUIDADO:** Existe una confusión común entre dos conceptos diferentes:
+
+#### **A) Arquitectura de Tres Niveles ANSI/SPARC (Tema 1)**
+
+Esta arquitectura describe **cómo los usuarios ven la base de datos ya implementada**:
+
+| Nivel | Descripción | Quién lo ve |
+|-------|-------------|-------------|
+| **Externo (Vistas)** | Cómo cada usuario ve los datos | Usuarios finales, aplicaciones |
+| **Conceptual/Lógico** | Estructura global de toda la BD | Administrador BD |
+| **Interno/Físico** | Cómo se almacenan físicamente | Sistema operativo, SGBD |
+
+**Ejemplo:**
+```
+Nivel Externo: Vista de CLIENTES para departamento comercial
+              └─ Solo ve: nombre, teléfono, email
+
+Nivel Conceptual: Tabla CLIENTES completa con todos sus campos
+                 └─ Estructura: PRIMARY KEY, FOREIGN KEY, tipos de datos
+
+Nivel Interno: Archivos en disco, índices B-tree, bloques de datos
+              └─ Implementación: /var/lib/mysql/database/clientes.ibd
+```
+
+---
+
+#### **B) Niveles de Diseño de Bases de Datos (Tema 2 - Modelo E/R)**
+
+Estos niveles describen **el proceso de creación de la base de datos** desde cero:
 
 ```mermaid
 flowchart TD
-    A[🌍 Mundo Real] -->|Análisis| B[📐 Nivel Conceptual]
-    B -->|Transformación| C[📊 Nivel Lógico]
-    C -->|Implementación| D[💾 Nivel Físico]
+    A[🌍 Mundo Real] -->|Análisis de Requisitos| B[📐 DISEÑO CONCEPTUAL]
+    B -->|Transformación| C[📊 DISEÑO LÓGICO]
+    C -->|Implementación| D[💾 DISEÑO FÍSICO]
     
     A2[Problema de negocio] -.-> A
     B2[Modelo E/R] -.-> B
-    C2[Modelo Relacional] -.-> C
-    D2[SQL en SGBD] -.-> D
+    C2[Modelo Relacional<br/>Tablas, PK, FK] -.-> C
+    D2[SQL en SGBD concreto<br/>CREATE TABLE] -.-> D
     
     style A fill:#e1f5ff
     style B fill:#fff4e1
@@ -84,17 +112,189 @@ flowchart TD
     style D fill:#e1ffe1
 ```
 
-| Nivel | Responde a | Herramienta | Ejemplo |
-|-------|------------|-------------|---------|
-| **1. Conceptual** | ¿QUÉ datos necesitamos? | Modelo E/R | Diagrama de entidades y relaciones |
-| **2. Lógico** | ¿CÓMO organizamos los datos? | Modelo Relacional | Tablas con PK y FK |
-| **3. Físico** | ¿DÓNDE y cómo se almacenan? | SQL | `CREATE TABLE` en MySQL |
+| Nivel de Diseño | Pregunta | Herramienta | Resultado | Ejemplo |
+|-----------------|----------|-------------|-----------|---------|
+| **1. CONCEPTUAL** | ¿QUÉ datos necesitamos? | **Modelo E/R** | Diagrama con entidades, atributos, relaciones | ![diagrama] CLIENTE-PEDIDO-PRODUCTO |
+| **2. LÓGICO** | ¿CÓMO organizamos esos datos? | **Modelo Relacional** | Esquema de tablas con PK, FK, normalización | CLIENTE(PK), PEDIDO(PK,FK) |
+| **3. FÍSICO** | ¿DÓNDE y cómo se almacenan? | **SQL específico del SGBD** | Scripts DDL, índices, particiones | CREATE TABLE en MySQL |
+
+---
+
+#### **C) Comparación Lado a Lado**
+
+| Aspecto | Arquitectura ANSI/SPARC (Tema 1) | Niveles de Diseño (Tema 2) |
+|---------|-----------------------------------|----------------------------|
+| **¿Cuándo se usa?** | BD ya implementada y funcionando | Proceso de creación de BD desde cero |
+| **Propósito** | Independencia de datos, seguridad | Metodología de diseño estructurado |
+| **Nivel Conceptual** | Vista global de la BD implementada | Modelo E/R (diagramas, entidades) |
+| **Nivel Lógico** | Parte del conceptual en ANSI | Modelo Relacional (tablas, claves) |
+| **Nivel Físico** | Almacenamiento en disco | Implementación SQL específica |
+| **Confusión común** | "Conceptual" = estructura de tablas | "Conceptual" = diagrama E/R |
+
+---
+
+### 1.4. Diferencias Clave: Modelo E/R vs Modelo Relacional
+
+**Pregunta crucial:** Si el Modelo E/R es conceptual y el Modelo Relacional es lógico, ¿en qué se diferencian?
+
+#### **Comparación Detallada:**
+
+| Característica | MODELO E/R (Conceptual) | MODELO RELACIONAL (Lógico) |
+|----------------|-------------------------|----------------------------|
+| **Nivel** | Diseño Conceptual | Diseño Lógico |
+| **Independencia SGBD** | ✅ Totalmente independiente | ⚠️ Independiente pero orientado a BDs relacionales |
+| **Notación** | Gráfica (diagramas) | Textual (esquemas de tablas) |
+| **Elementos principales** | Entidades, Atributos, Relaciones | Tablas, Columnas, Claves, Constraints |
+| **Relaciones N:M** | Se representan directamente con rombo | Se convierten en tabla intermedia |
+| **Atributos multivaluados** | Se permiten `{Teléfono}` | ❌ NO permitidos (violan 1FN) |
+| **Atributos compuestos** | Se permiten (Dirección completa) | Se descomponen en columnas atómicas |
+| **Herencia** | Se representa con jerarquías IS-A | Varias estrategias de implementación |
+| **Público objetivo** | Usuarios, analistas de negocio | Diseñadores de BD, programadores |
+| **Lenguaje** | Visual, comprensible | Formal, técnico |
+| **Ejemplo** | ![Rectángulo] CLIENTE → ![Rombo] realiza → ![Rectángulo] PEDIDO | `CLIENTE(#id)` → `PEDIDO(#id, id_cliente FK)` |
+
+---
+
+#### **Ejemplo Completo de Transformación:**
+
+**MODELO E/R (Conceptual):**
+
+```mermaid
+erDiagram
+    ESTUDIANTE {
+        int Cod_Estudiante PK
+        string Nombre
+        string Telefono_array
+    }
+    ASIGNATURA {
+        string Cod_Asignatura PK
+        string Nombre
+        int Creditos
+    }
+    ESTUDIANTE }o--o{ ASIGNATURA : cursa
+```
+
+**Características del E/R:**
+- Relación N:M directa (rombo)
+- Atributo multivaluado: `{Teléfono}`
+- Visual y gráfico
+
+---
+
+**MODELO RELACIONAL (Lógico):**
+
+```
+ESTUDIANTE(#Cod_Estudiante, Nombre)
+ASIGNATURA(#Cod_Asignatura, Nombre, Créditos)
+MATRÍCULA(#Cod_Estudiante, #Cod_Asignatura, Fecha, Nota)
+  FK: Cod_Estudiante → ESTUDIANTE
+  FK: Cod_Asignatura → ASIGNATURA
+TELÉFONO_ESTUDIANTE(#Cod_Estudiante, #Teléfono, Tipo)
+  FK: Cod_Estudiante → ESTUDIANTE
+```
+
+**Transformaciones aplicadas:**
+1. ✅ Relación N:M → Tabla intermedia MATRÍCULA
+2. ✅ Atributo multivaluado → Tabla TELÉFONO_ESTUDIANTE
+3. ✅ Definidas claves primarias (PK) y foráneas (FK)
+4. ✅ Normalización aplicada (cumple 1FN, 2FN, 3FN)
+
+---
+
+**MODELO FÍSICO (Implementación SQL en MySQL):**
+
+```sql
+CREATE TABLE ESTUDIANTE (
+    Cod_Estudiante INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre VARCHAR(100) NOT NULL,
+    INDEX idx_nombre (Nombre)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE ASIGNATURA (
+    Cod_Asignatura VARCHAR(10) PRIMARY KEY,
+    Nombre VARCHAR(100) NOT NULL,
+    Creditos TINYINT CHECK (Creditos > 0),
+    INDEX idx_nombre (Nombre)
+) ENGINE=InnoDB;
+
+CREATE TABLE MATRICULA (
+    Cod_Estudiante INT,
+    Cod_Asignatura VARCHAR(10),
+    Fecha_Matricula DATE DEFAULT CURRENT_DATE,
+    Nota DECIMAL(4,2) CHECK (Nota BETWEEN 0 AND 10),
+    PRIMARY KEY (Cod_Estudiante, Cod_Asignatura),
+    FOREIGN KEY (Cod_Estudiante) REFERENCES ESTUDIANTE(Cod_Estudiante)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (Cod_Asignatura) REFERENCES ASIGNATURA(Cod_Asignatura)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    INDEX idx_fecha (Fecha_Matricula)
+) ENGINE=InnoDB;
+
+CREATE TABLE TELEFONO_ESTUDIANTE (
+    Cod_Estudiante INT,
+    Telefono VARCHAR(15),
+    Tipo ENUM('Móvil', 'Fijo', 'Trabajo') NOT NULL,
+    PRIMARY KEY (Cod_Estudiante, Telefono),
+    FOREIGN KEY (Cod_Estudiante) REFERENCES ESTUDIANTE(Cod_Estudiante)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+```
+
+**Decisiones físicas específicas de MySQL:**
+- Motor de almacenamiento: InnoDB (transaccional)
+- AUTO_INCREMENT para claves primarias
+- Índices para optimizar búsquedas
+- Charset: utf8mb4 (soporte completo Unicode)
+- Constraints: CHECK, ON DELETE CASCADE
+- Tipos específicos: TINYINT, ENUM, DECIMAL
+
+---
+
+#### **¿Por qué esta separación?**
+
+| Ventaja | Explicación |
+|---------|-------------|
+| **Independencia del SGBD** | El E/R es igual para MySQL, PostgreSQL u Oracle |
+| **Comunicación** | Los usuarios entienden el E/R, los técnicos el Relacional |
+| **Validación temprana** | Errores se detectan en E/R (fácil de corregir) |
+| **Portabilidad** | Cambiar de SGBD solo afecta al nivel físico |
+| **Evolución** | Modificar E/R sin tocar código SQL |
+| **Normalización** | El paso E/R → Relacional aplica normalización |
+
+---
+
+### 1.5. Resumen de la Distinción
+
+**En este curso (Tema 2):**
+
+```
+Requisitos del Usuario
+         ↓
+📐 NIVEL CONCEPTUAL → Modelo Entidad/Relación (E/R)
+         ↓ (Transformación)
+📊 NIVEL LÓGICO → Modelo Relacional (Tablas, PK, FK)
+         ↓ (Implementación)
+💾 NIVEL FÍSICO → SQL en SGBD específico (MySQL, PostgreSQL...)
+```
+
+**Vocabulario correcto para este tema:**
+- ✅ "Vamos a diseñar el **modelo conceptual E/R**"
+- ✅ "Transformaremos el E/R al **modelo lógico relacional**"
+- ✅ "Implementaremos el modelo relacional en **SQL físico**"
+
+**Vocabulario INCORRECTO:**
+- ❌ "El modelo conceptual son las tablas" → NO, las tablas son lógicas
+- ❌ "El E/R y el relacional son lo mismo" → NO, son niveles diferentes
+- ❌ "El nivel conceptual ANSI es el E/R" → NO, son contextos diferentes
+
+---
 
 **Ventajas de esta separación:**
 - Cambiar de SGBD sin redesñar el modelo conceptual
 - Validar requisitos antes de programar
 - Optimizar implementación física sin alterar la lógica
 - Documentación clara del sistema
+- Diferentes equipos trabajan en diferentes niveles
 
 ---
 
