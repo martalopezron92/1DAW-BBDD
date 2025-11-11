@@ -15,3 +15,10 @@ Thumbs.db
 # Archivos de respaldo
 *.bak
 *.tmp
+
+
+# Actividades de clase
+actividades/U2-Entidad-Relacion/*
+!actividades/U2-Entidad-Relacion/EJERCICIOS_INICIALES_ENTIDAD_RELACION_I.md
+!actividades/U2-Entidad-Relacion/EJERCICIOS_INICIALES_ENTIDAD_RELACION_II.md
+!actividades/U2-Entidad-Relacion/EJERCICIOS_INICIALES_ENTIDAD_RELACION_III.md

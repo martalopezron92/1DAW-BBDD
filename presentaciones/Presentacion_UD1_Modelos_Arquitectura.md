@@ -196,11 +196,11 @@ graph LR
 | **🔧 Enlaces manuales** | Hay que gestionar punteros | Propenso a errores |
 | **📈 Overhead** | Gestión de múltiples relaciones | Mayor uso de recursos |
 
-<!-- ### ❓ **PREGUNTA DE REFLEXIÓN**
+### ❓ **PREGUNTA DE REFLEXIÓN**
 > **🤔 En una red social como Instagram, ¿cómo representarías que:**
 > - Un usuario puede seguir a muchos otros
 > - Un usuario puede ser seguido por muchos otros
-> - Un post puede recibir likes de múltiples usuarios -->
+> - Un post puede recibir likes de múltiples usuarios
 
 ---
 
@@ -240,7 +240,7 @@ graph LR
 | P002 | MacBook Air | 1299.99€ | Portátiles |
 | P003 | AirPods Pro | 249.99€ | Accesorios |
 
-<!-- ### 🎮 **ACTIVIDAD INTERACTIVA: "Constructor de Consultas"**
+### 🎮 **ACTIVIDAD INTERACTIVA: "Constructor de Consultas"**
 
 **🔍 Preguntas a resolver usando las tablas:**
 
@@ -253,7 +253,7 @@ graph LR
 1. Ana García
 2. 2 pedidos (101 y 103)
 3. Pedido 101 (250.50€)
-4. AirPods Pro (249.99€) -->
+4. AirPods Pro (249.99€)
 
 ### 🔑 **CONCEPTOS CLAVE**
 
@@ -332,7 +332,7 @@ Referencia a ID_CLIENTE en tabla CLIENTES
 1. 🎨 Diseña las tablas con sus campos
 2. 🔑 Identifica claves primarias y externas
 3. 🔗 Define las relaciones entre tablas
-<!-- 4. 📝 Escribe 3 consultas de ejemplo -->
+4. 📝 Escribe 3 consultas de ejemplo
 
 ### ❓ **PREGUNTA DE TRANSICIÓN**
 > **🤔 Después de ver estos tres modelos, ¿cuál crees que es mejor para:**
@@ -366,21 +366,21 @@ Referencia a ID_CLIENTE en tabla CLIENTES
 - **Relaciones:** Una carpeta padre, múltiples hijos
 - **Accesos:** Navegación por rutas
 
-<!-- **💡 Respuesta esperada:** Jerárquico (estructura natural de árbol) -->
+**💡 Respuesta esperada:** Jerárquico (estructura natural de árbol)
 
 #### **📋 Escenario 2: Red Social Profesional (LinkedIn)**
 - **Estructura:** Usuarios, empresas, habilidades, contactos
 - **Relaciones:** Un usuario puede trabajar en varias empresas, tener múltiples habilidades
 - **Accesos:** Búsquedas complejas, recomendaciones
 
-<!-- **💡 Respuesta esperada:** Relacional (flexibilidad para consultas complejas) -->
+**💡 Respuesta esperada:** Relacional (flexibilidad para consultas complejas)
 
 #### **📋 Escenario 3: Sistema de Reservas de Vuelos**
 - **Estructura:** Vuelos, pasajeros, asientos, rutas
 - **Relaciones:** Un vuelo tiene múltiples pasajeros, un pasajero puede tener múltiples vuelos
 - **Accesos:** Consultas en tiempo real, alta concurrencia
 
-<!-- **💡 Respuesta esperada:** Relacional (SQL para consultas complejas) -->
+**💡 Respuesta esperada:** Relacional (SQL para consultas complejas)
 
 ### 🎯 **CASOS DE USO REALES**
 
@@ -396,14 +396,14 @@ Referencia a ID_CLIENTE en tabla CLIENTES
 - 🎓 **Sistemas educativos:** Moodle, universidades
 - 🏥 **Gestión hospitalaria:** Historiales médicos
 
-<!-- ### ❓ **PREGUNTA REFLEXIVA**
+### ❓ **PREGUNTA REFLEXIVA**
 > **🤔 ¿Por qué crees que el modelo relacional ha "ganado" la batalla y es el más usado actualmente?**
 
 **💡 Pistas para el debate:**
 - Estándar SQL
 - Independencia de datos
 - Flexibilidad de consultas
-- Ecosistema de herramientas -->
+- Ecosistema de herramientas
 
 ---
 
@@ -443,11 +443,11 @@ graph LR
 | 🎮 **Fortnite online** | ? | ? |
 | 💻 **Excel con BD local** | ? | ? |
 
-<!-- **💡 Respuestas:**
+**💡 Respuestas:**
 - 🏦 Cliente: Cajero | Servidor: Sistema bancario central
 - 📧 Cliente: Navegador | Servidor: Servidores de Google
 - 🎮 Cliente: Consola/PC | Servidor: Servidores de Epic Games
-- 💻 Cliente y Servidor: Mismo ordenador -->
+- 💻 Cliente y Servidor: Mismo ordenador
 
 ### 🧩 **COMPONENTES PRINCIPALES**
 
@@ -500,8 +500,8 @@ Servidor responde: "SALDO: 1.250,75€"
 | **🌐 Dependencia de red** | Sin conexión = sin servicio | Sin wifi = no acceso |
 | **⚡ Cuello de botella** | Servidor limitado por capacidad | Lentitud en horas pico |
 
-<!-- ### ❓ **PREGUNTA DE REFLEXIÓN**
-> **🤔 ¿Por qué aplicaciones como WhatsApp funcionan incluso cuando tienes poca conexión, pero aplicaciones como Instagram necesitan buena conexión?** -->
+### ❓ **PREGUNTA DE REFLEXIÓN**
+> **🤔 ¿Por qué aplicaciones como WhatsApp funcionan incluso cuando tienes poca conexión, pero aplicaciones como Instagram necesitan buena conexión?**
 
 ---
 
@@ -543,7 +543,8 @@ graph TD
     A[💻 PC Oficina 1] ---|🌐 Red| D[🖥️ SERVIDOR BD]
     B[💻 PC Oficina 2] ---|🌐 Red| D
     C[💻 PC Oficina 3] ---|🌐 Red| D
-
+    
+    D --> E[🗄️ Oracle Database]
 ```
 
 #### **💡 Ejemplo: Sistema de Gestión Escolar**
@@ -551,6 +552,12 @@ graph TD
 - **Clientes:** PCs en secretaría, aulas, dirección
 - **BD:** Datos de alumnos, notas, horarios
 
+#### **🎮 Actividad: "Diseña tu Red Escolar"**
+**Identifica qué tipo de información accedería cada usuario:**
+- 👨‍🏫 **Profesor:** ¿Qué puede ver/modificar?
+- 👩‍💼 **Secretaria:** ¿Qué permisos necesita?
+- 👨‍💼 **Director:** ¿Qué nivel de acceso?
+- 👨‍🎓 **Alumno:** ¿Qué puede consultar?
 
 ### 🌍 **3. BASES DE DATOS DISTRIBUIDAS**
 
@@ -606,11 +613,23 @@ graph TD
 - Base de datos MySQL
 - Almacena usuarios, cursos, calificaciones
 
+#### **🎮 Actividad: "Traza la Petición"**
+
+**Escenario:** Estudiante sube una tarea a Moodle
+
+**Paso a paso:**
+1. 🖱️ Estudiante hace clic en "Subir archivo"
+2. 🌐 Navegador envía petición HTTP
+3. ⚙️ Servidor web recibe y procesa
+4. 🧠 Aplicación valida permisos y guarda archivo
+5. 🗄️ Base de datos almacena metadatos
+6. ✅ Confirmación regresa al estudiante
 
 ### ❓ **PREGUNTA COMPARATIVA**
 > **🤔 ¿Qué configuración usarías para:**
 > - Una tienda con 3 empleados
 > - Un banco nacional
+> - Una startup tecnológica
 > - Un videojuego multijugador global
 
 ---
@@ -633,7 +652,7 @@ graph TD
     B ---|🔗 SQL<br/>Conectores BD| C
 ```
 
-<!-- ### 🎮 **ACTIVIDAD: "Diseña Amazon en 3 Capas"**
+### 🎮 **ACTIVIDAD: "Diseña Amazon en 3 Capas"**
 
 **Para cada funcionalidad de Amazon, identifica en qué capa va:**
 
@@ -642,7 +661,7 @@ graph TD
 | **🛒 Carrito de compra** | Interfaz del carrito | Calcular total + impuestos | Productos y precios |
 | **🔍 Buscar productos** | Caja de búsqueda | Algoritmo de búsqueda | Catálogo de productos |
 | **💳 Procesar pago** | Formulario de pago | Validar tarjeta + stock | Guardar transacción |
-| **⭐ Reseñas** | Mostrar estrellas | Calcular promedio | Comentarios de usuarios | -->
+| **⭐ Reseñas** | Mostrar estrellas | Calcular promedio | Comentarios de usuarios |
 
 ### 💡 **EJEMPLO DETALLADO: Plataforma de Streaming**
 
@@ -687,8 +706,33 @@ graph TD
 | **🔄 Reutilización** | Una lógica para múltiples interfaces | API para web y móvil |
 | **🧪 Testing** | Pruebas independientes por capa | Test unitarios de lógica |
 
+### 🚀 **EVOLUCIÓN A LA NUBE (Cloud)**
 
-<!-- ### 🎮 **ACTIVIDAD FINAL: "Tu Startup Multicapa"**
+#### **☁️ Microservicios y Cloud Native**
+
+```mermaid
+graph TD
+    A[📱 App Móvil] --> B[🌐 API Gateway]
+    C[💻 Web App] --> B
+    
+    B --> D[🧪 Microservicio Auth]
+    B --> E[🛒 Microservicio Productos]
+    B --> F[💳 Microservicio Pagos]
+    B --> G[📊 Microservicio Analytics]
+    
+    D --> H[🗄️ BD Usuarios]
+    E --> I[🗄️ BD Productos]
+    F --> J[🗄️ BD Transacciones]
+    G --> K[📈 BD Analytics]
+```
+
+#### **🎯 Características Cloud Native:**
+- **🐳 Contenedores:** Docker, Kubernetes
+- **⚡ Serverless:** AWS Lambda, Azure Functions
+- **📊 Base de datos como servicio:** RDS, CosmosDB
+- **🔄 Auto-escalado:** Responde a demanda automáticamente
+
+### 🎮 **ACTIVIDAD FINAL: "Tu Startup Multicapa"**
 
 **Escenario:** Crear una plataforma de delivery de comida
 
@@ -711,7 +755,7 @@ graph TD
 > - Arquitectura de 3 capas
 > - Microservicios en la nube
 > 
-> **¿Cuándo usarías cada uno?** -->
+> **¿Cuándo usarías cada uno?**
 
 ---
 
@@ -741,7 +785,7 @@ graph TD
 - **Usuarios:** 2 empleados
 - **Requisitos:** Simple, económico, confiable
 
-<!-- ### 🎭 **ACTIVIDAD 2: "Role Playing: Comité de Decisión"**
+### 🎭 **ACTIVIDAD 2: "Role Playing: Comité de Decisión"**
 
 **Roles:**
 - 👑 **CTO (Chief Technology Officer):** Toma decisiones técnicas
@@ -759,9 +803,9 @@ graph TD
 - Coste de desarrollo
 - Tiempo hasta el lanzamiento
 - Seguridad de datos
-- Experiencia de usuario -->
+- Experiencia de usuario
 
-### 📊 **ACTIVIDAD 2: "Diseño Completo: Red Social Universitaria"**
+### 📊 **ACTIVIDAD 3: "Diseño Completo: Red Social Universitaria"**
 
 **Especificaciones:**
 - 👥 10,000 estudiantes
