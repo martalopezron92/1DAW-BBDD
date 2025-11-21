@@ -1,6 +1,5 @@
 # EJERCICIOS INICIALES ENTIDAD RELACIÓN IV
 
-
 ## Diferenciación entre Dependencia en EXISTENCIA vs IDENTIFICACIÓN
 
 ## RECORDATORIO: ¿Cómo diferenciarlas?
