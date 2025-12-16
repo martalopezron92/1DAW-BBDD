@@ -101,13 +101,6 @@
 | **Usuarios del SGBD** | Identifica y describe correctamente todos los tipos con funciones específicas | Identifica mayoría con descripciones adecuadas | Identifica algunos con descripciones básicas | Pocos usuarios o descripciones incorrectas |
 | **Ejemplos de lenguajes** | 2 ejemplos específicos y técnicamente correctos para cada lenguaje | 1-2 ejemplos correctos por lenguaje | 1 ejemplo básico por lenguaje | Ejemplos incorrectos o insuficientes |
 
-#### FASE 5: IMPLEMENTACIÓN Y SEGURIDAD (BONUS - 10 puntos)
-
-| Criterio | Excelente (9-10 pts) | Bueno (7-8 pts) | Suficiente (5-6 pts) | Insuficiente (0-4 pts) |
-|----------|----------------------|-------------------|----------------------|----------------------|
-| **Plan de implementación** | Plan detallado con orden lógico y migración bien planificada | Plan adecuado con orden correcto | Plan básico pero viable | Plan confuso o inviable |
-| **Medidas de seguridad** | Medidas completas incluyendo RGPD y seguridad técnica | Medidas adecuadas de seguridad | Medidas básicas pero correctas | Medidas insuficientes o incorrectas |
-
 ---
 
 ## CRITERIOS TRANSVERSALES PARA TODAS LAS PRÁCTICAS
