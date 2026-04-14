@@ -28,7 +28,6 @@ Aplicar lo trabajado en clase para pasar de una estructura defectuosa a un model
 3. Las decisiones deben estar justificadas, no solo "porque si".
 4. Podeis pedir pistas, pero restan puntos.
 5. Se puntua mucho mas la calidad del razonamiento que la velocidad.
-6. Habra recompensas parciales durante la actividad.
 
 ## Caso principal (Caso A): ByteBites
 
@@ -68,11 +67,6 @@ Tabla: `PEDIDO_GENERAL`
 - Un restaurante ofrece muchos productos.
 - El total del pedido no deberia contradecir los importes por linea.
 
-## Variantes equivalentes (si el profesor lo indica)
-- Caso B: plataforma de streaming (suscripciones, perfiles, contenidos).
-- Caso C: gimnasio (socios, clases, monitores, cuotas).
-
-Si vuestro equipo recibe una variante, la dinamica y los criterios son exactamente los mismos.
 
 ## Fases obligatorias
 
@@ -129,9 +123,6 @@ Exponed en 2 minutos:
 - Bonus pequeno por preguntas tecnicas respetuosas a otros equipos.
 
 Detalle completo en `sistema_puntuacion.md`.
-
-## Recompensas
-Habra recompensas parciales durante la sesion y canje final orientativo por puntos (chuches, mini-premios o ventajas academicas ligeras, segun indique el profesor).
 
 ## Material que debe entregar cada grupo
 1. Ficha de grupo completa (`ficha_grupo.md` como plantilla).

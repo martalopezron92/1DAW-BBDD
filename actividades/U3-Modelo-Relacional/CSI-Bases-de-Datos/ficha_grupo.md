@@ -12,12 +12,6 @@
 |  |  |  |
 |  |  |  |
 
-## Caso asignado
-- [ ] Caso A ByteBites
-- [ ] Caso B Streaming
-- [ ] Caso C Gimnasio
-
----
 
 ## Fase 1. Investigacion (problemas detectados)
 ### 1) Redundancias observadas
