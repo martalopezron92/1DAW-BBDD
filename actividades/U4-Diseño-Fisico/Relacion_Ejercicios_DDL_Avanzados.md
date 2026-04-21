@@ -209,7 +209,6 @@ erDiagram
         PEDIDOS ||--o{ LINEAS_PEDIDO : contiene
         PRODUCTOS ||--o{ LINEAS_PEDIDO : aparece_en
         CATEGORIAS ||--o{ PRODUCTOS : clasifica
-        CATEGORIAS ||--o{ CATEGORIAS : agrupa
         CLIENTES ||--o{ VALORACIONES : emite
         PRODUCTOS ||--o{ VALORACIONES : recibe
         PEDIDOS ||--o{ VALORACIONES : verifica
@@ -322,7 +321,6 @@ erDiagram
         ESTUDIANTES ||--o{ MATRICULAS : realiza
         ASIGNATURAS ||--o{ MATRICULAS : recibe
         GRUPOS ||--o{ MATRICULAS : organiza
-        ESTUDIANTES ||--o{ ESTUDIANTES : tutoriza
         MATRICULAS ||--o{ CALIFICACIONES : genera
         EVALUACIONES ||--o{ CALIFICACIONES : compone
         ASIGNATURAS ||--o{ EVALUACIONES : define
@@ -433,8 +431,8 @@ erDiagram
         EMPRESAS ||--o{ PROYECTOS : ejecuta
         CLIENTES ||--o{ PROYECTOS : encarga
         PROYECTOS ||--o{ CERTIFICACIONES : genera
+        EMPRESAS ||--o{ CERTIFICACIONES : certifica
         EMPRESAS ||--o{ TRABAJADORES : contrata
-        TRABAJADORES ||--o{ TRABAJADORES : supervisa
         PROYECTOS ||--o{ ASIGNACIONES : organiza
         TRABAJADORES ||--o{ ASIGNACIONES : participa
         ASIGNACIONES ||--o{ PARTES : produce
