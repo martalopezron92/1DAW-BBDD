@@ -8,74 +8,74 @@ Esta relación contiene 5 ejercicios amplios de modelado físico orientados a Or
 - Claves primarias, alternativas y foráneas.
 - Restricciones `CHECK`, `UNIQUE`, `DEFAULT` y acciones referenciales.
 - Secuencias o identidad para claves numéricas autogeneradas.
-- Triggers cuando la restricción no puede resolverse únicamente con DDL declarativo.
+
+Los diagramas se presentan en formato Mermaid para que se visualicen mejor en la vista previa Markdown de VS Code.
 
 En todos los ejercicios:
 
 1. Nombra las restricciones de forma explícita.
 2. Separa, cuando sea razonable, la creación base de tablas y la adición posterior de restricciones.
-3. Justifica qué restricciones resuelves con DDL y cuáles requieren trigger.
+3. Justifica qué restricciones resuelves con DDL declarativo y cuáles quedan fuera del alcance de esta versión simplificada.
 4. Comprueba el resultado con `DESC` y consultando el diccionario de datos.
 
 ---
 
 ## Ejercicio 1. Sistema de Gestión Bibliotecaria
 
-### Grafo relacional
+### Esquema relacional
 
-```plain
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│    AUTORES      │     │     LIBROS      │     │   EDITORIALES   │
-├─────────────────┤     ├─────────────────┤     ├─────────────────┤
-│ id_autor (PK)   │◄────┤ id_autor (FK)   │     │ id_editorial(PK)│◄────┐
-│ nombre          │     │ id_editorial(FK)─┘────┤ nombre          │     │
-│ nacionalidad    │     │ titulo          │     │ pais            │     │
-│ fecha_nacimiento│     │ isbn            │     │ fundacion       │     │
-└─────────────────┘     │ anio_publicacion│     └─────────────────┘     │
-                        │ genero          │                               │
-                        │ ejemplares_total│                               │
-                        └─────────────────┘                               │
-                                  │                                       │
-                                  │                                       │
-                        ┌─────────────────┐     ┌─────────────────┐      │
-                        │   PRESTAMOS     │     │   USUARIOS      │      │
-                        ├─────────────────┤     ├─────────────────┤      │
-                        │ id_prestamo (PK)│     │ id_usuario (PK) │      │
-                        │ id_libro (FK)───┘────┤ dni             │      │
-                        │ id_usuario (FK)───────┤ nombre          │      │
-                        │ fecha_prestamo  │     │ email           │      │
-                        │ fecha_devolucion│     │ telefono        │      │
-                        │ fecha_real_dev  │     │ fecha_registro  │      │
-                        │ estado          │     │ tipo            │      │
-                        │ multa_acumulada │     └─────────────────┘      │
-                        └─────────────────┘                              │
-                                  │                                      │
-                        ┌─────────────────┐                              │
-                        │   DEVOLUCIONES  │                              │
-                        ├─────────────────┤                              │
-                        │ id_devolucion(PK)│                             │
-                        │ id_prestamo (FK)│                              │
-                        │ dias_retraso    │                              │
-                        │ multa_calculada │                              │
-                        └─────────────────┘                              │
-                                                                           │
-                        ┌─────────────────┐                              │
-                        │  COPIAS_FISICAS │                              │
-                        ├─────────────────┤                              │
-                        │ id_copia (PK)   │                              │
-                        │ id_libro (FK)───┘──────────────────────────────┘
-                        │ codigo_barras   │
-                        │ ubicacion       │
-                        │ estado_fisico   │
-                        └─────────────────┘
+```mermaid
+erDiagram
+        AUTORES ||--o{ LIBROS : escribe
+        EDITORIALES ||--o{ LIBROS : publica
+        LIBROS ||--o{ PRESTAMOS : genera
+        USUARIOS ||--o{ PRESTAMOS : realiza
+        PRESTAMOS ||--o| DEVOLUCIONES : produce
+        LIBROS ||--o{ COPIAS_FISICAS : tiene
+
+        AUTORES {
+                int id_autor PK
+                string nombre
+        }
+        EDITORIALES {
+                int id_editorial PK
+                string nombre
+        }
+        LIBROS {
+                int id_libro PK
+                int id_autor FK
+                int id_editorial FK
+                string titulo
+                string isbn
+        }
+        USUARIOS {
+                int id_usuario PK
+                string nombre
+                date fecha_registro
+        }
+        PRESTAMOS {
+                int id_prestamo PK
+                int id_libro FK
+                int id_usuario FK
+                date fecha_prestamo
+                string estado
+        }
+        DEVOLUCIONES {
+                int id_devolucion PK
+                int id_prestamo FK
+                number multa_calculada
+        }
+        COPIAS_FISICAS {
+                int id_copia PK
+                int id_libro FK
+                string estado_fisico
+        }
 ```
 
 ### Restricciones a implementar
 
 - Los identificadores principales de `AUTORES`, `EDITORIALES`, `LIBROS`, `USUARIOS` y `PRESTAMOS` serán numéricos, positivos y se generarán automáticamente.
 - El ISBN de cada libro tendrá siempre 13 caracteres, no podrá repetirse y deberá comenzar por `978` o `979`.
-- El DNI de cada usuario tendrá siempre 9 caracteres (8 números + 1 letra mayúscula), no podrá repetirse y se validará mediante patrón.
-- El email de los usuarios debe contener obligatoriamente una `@` y un dominio válido.
 - El número de ejemplares total de un libro no podrá ser negativo, tendrá como valor inicial 1 y no podrá superar 500.
 - La fecha de préstamo no podrá ser posterior a la fecha actual.
 - La fecha de devolución prevista debe ser obligatoriamente posterior a la fecha de préstamo.
@@ -97,97 +97,77 @@ En todos los ejercicios:
 2. Definir las claves primarias, claves alternativas y claves foráneas necesarias.
 3. Incorporar las restricciones de dominio, obligatoriedad y valores por defecto.
 4. Implementar las acciones referenciales de borrado indicadas en el enunciado.
-5. Resolver mediante trigger las reglas que dependan de conteos, fechas relativas al sistema o cálculos automáticos.
+5. Indicar qué reglas del enunciado no pueden resolverse solo con DDL declarativo en esta versión simplificada.
 6. Elaborar un juego mínimo de inserciones de prueba que demuestre casos válidos y casos rechazados.
 
 ---
 
 ## Ejercicio 2. Sistema de Reservas Hoteleras
 
-### Grafo relacional
+### Esquema relacional
 
-```plain
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│    HOTELES      │     │   HABITACIONES  │     │   CATEGORIAS    │
-├─────────────────┤     ├─────────────────┤     ├─────────────────┤
-│ id_hotel (PK)   │◄────┤ id_hotel (FK)   │     │ id_categoria(PK)│◄──┐
-│ nombre          │     │ id_categoria(FK)─┘────┤ estrellas       │   │
-│ direccion       │     │ numero_habitacion│    │ denominacion    │   │
-│ ciudad          │     │ piso            │     │ precio_base     │   │
-│ pais            │     │ capacidad       │     └─────────────────┘   │
-│ telefono        │     │ vista_mar       │                           │
-│ email           │     │ estado          │                           │
-│ cif             │     └─────────────────┘                           │
-│ estrellas       │             │                                     │
-└─────────────────┘             │                                     │
-                                │             ┌─────────────────┐     │
-                                │             │    RESERVAS     │     │
-                                │             ├─────────────────┤     │
-                                │             │ id_reserva (PK) │     │
-                                │             │ id_hotel (FK)───┘─────┘
-                                │             │ id_habitacion(FK)│
-                                │             │ id_cliente (FK)─┐
-                                │             │ fecha_entrada   │ │
-                                │             │ fecha_salida    │ │
-                                │             │ num_huespedes   │ │
-                                │             │ precio_total    │ │
-                                │             │ estado          │ │
-                                │             │ fecha_reserva   │ │
-                                │             └─────────────────┘ │
-                                │                                 │
-                                │             ┌─────────────────┐ │
-                                │             │    CLIENTES     │ │
-                                │             ├─────────────────┤ │
-                                │             │ id_cliente (PK) │◄┘
-                                │             │ dni             │
-                                │             │ nombre          │
-                                │             │ apellidos       │
-                                │             │ email           │
-                                │             │ telefono        │
-                                │             │ fecha_nacimiento│
-                                │             │ nacionalidad    │
-                                │             │ tipo_cliente    │
-                                │             └─────────────────┘
-                                │
-                                │             ┌────────────────────┐
-                                │             │ SERVICIOS_RESERVA  │
-                                │             ├────────────────────┤
-                                │             │ id_linea (PK)      │
-                                │             │ id_reserva (FK)────┘
-                                │             │ id_servicio (FK)───┐
-                                │             │ cantidad           │
-                                │             │ precio_linea       │
-                                │             └────────────────────┘
-                                │                                   │
-                                │             ┌─────────────────┐   │
-                                │             │    SERVICIOS    │   │
-                                │             ├─────────────────┤   │
-                                │             │ id_servicio (PK)│◄──┘
-                                │             │ nombre          │
-                                │             │ descripcion     │
-                                │             │ precio_unidad   │
-                                │             │ tipo_servicio   │
-                                │             └─────────────────┘
-                                │
-                                │             ┌─────────────────┐
-                                │             │  MANTENIMIENTO  │
-                                │             ├─────────────────┤
-                                │             │ id_incidencia(PK)│
-                                └─────────────┤ id_habitacion(FK)│
-                                              │ fecha_incidencia│
-                                              │ tipo_problema   │
-                                              │ estado_reparacion│
-                                              │ coste_reparacion│
-                                              └─────────────────┘
+```mermaid
+erDiagram
+        HOTELES ||--o{ HABITACIONES : tiene
+        CATEGORIAS ||--o{ HABITACIONES : clasifica
+        HOTELES ||--o{ RESERVAS : recibe
+        HABITACIONES ||--o{ RESERVAS : asigna
+        CLIENTES ||--o{ RESERVAS : realiza
+        RESERVAS ||--o{ SERVICIOS_RESERVA : incluye
+        SERVICIOS ||--o{ SERVICIOS_RESERVA : se_contrata
+        HABITACIONES ||--o{ MANTENIMIENTO : genera
+
+        HOTELES {
+                int id_hotel PK
+                string nombre
+                number estrellas
+        }
+        HABITACIONES {
+                int id_habitacion PK
+                int id_hotel FK
+                int id_categoria FK
+                number capacidad
+                string estado
+        }
+        CATEGORIAS {
+                int id_categoria PK
+                string denominacion
+                number precio_base
+        }
+        CLIENTES {
+                int id_cliente PK
+                string nombre
+                string tipo_cliente
+        }
+        RESERVAS {
+                int id_reserva PK
+                int id_hotel FK
+                int id_habitacion FK
+                int id_cliente FK
+                date fecha_entrada
+                date fecha_salida
+        }
+        SERVICIOS {
+                int id_servicio PK
+                string nombre
+                number precio_unidad
+        }
+        SERVICIOS_RESERVA {
+                int id_linea PK
+                int id_reserva FK
+                int id_servicio FK
+                number cantidad
+        }
+        MANTENIMIENTO {
+                int id_incidencia PK
+                int id_habitacion FK
+                string estado_reparacion
+        }
 ```
 
 ### Restricciones a implementar
 
 - Los identificadores principales de `HOTELES`, `HABITACIONES`, `CATEGORIAS`, `CLIENTES`, `RESERVAS` y `SERVICIOS` serán numéricos, positivos y se generarán automáticamente.
-- El CIF de cada hotel tendrá siempre 9 caracteres, no podrá repetirse y seguirá el formato español.
-- El DNI de cada cliente seguirá el formato válido español, no podrá repetirse.
-- El email de hoteles y clientes debe contener `@` y un dominio con al menos un punto.
-- El teléfono debe contener entre 9 y 15 dígitos numéricos, permitiendo prefijo internacional con `+` opcional.
 - La capacidad de una habitación no podrá ser negativa, tendrá como valor inicial 2 y no podrá superar 6.
 - El número de huéspedes en una reserva no podrá superar la capacidad de la habitación asignada.
 - La fecha de entrada debe ser igual o posterior a la fecha de la reserva.
@@ -210,8 +190,8 @@ En todos los ejercicios:
 
 1. Crear todas las tablas del sistema hotelero con los tipos de datos más adecuados.
 2. Establecer claves primarias, únicas y foráneas, incluyendo las acciones de borrado requeridas.
-3. Implementar restricciones de formato, rangos, listas cerradas y valores por defecto.
-4. Resolver con trigger las validaciones que comparen datos entre tablas o calculen importes automáticamente.
+3. Implementar restricciones de longitud, rangos, listas cerradas y valores por defecto.
+4. Dejar fuera de alcance las validaciones que exijan comparar datos entre tablas o cálculos automáticos.
 5. Preparar inserciones de ejemplo que verifiquen reservas correctas, errores de capacidad y borrados referenciales.
 6. Documentar brevemente por qué algunas reglas no pueden resolverse solo con `CHECK` en Oracle.
 
@@ -219,101 +199,87 @@ En todos los ejercicios:
 
 ## Ejercicio 3. Plataforma de E-Commerce
 
-### Grafo relacional
+### Esquema relacional
 
-```plain
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│    CLIENTES     │     │     PEDIDOS     │     │   DIRECCIONES   │
-├─────────────────┤     ├─────────────────┤     ├─────────────────┤
-│ id_cliente (PK) │◄────┤ id_cliente (FK) │     │ id_direccion(PK)│◄──┐
-│ email (UQ)      │     │ id_direccion(FK)┘─────┤ id_cliente (FK)─┘   │
-│ password_hash   │     │ id_pedido (PK)  │     │ tipo_direccion  │   │
-│ nombre          │     │ fecha_pedido    │     │ calle           │   │
-│ apellidos       │     │ estado_pedido   │     │ numero          │   │
-│ telefono        │     │ total_pedido    │     │ ciudad          │   │
-│ fecha_registro  │     │ metodo_pago     │     │ codigo_postal   │   │
-│ estado_cuenta   │     │ num_seguimiento │     │ pais            │   │
-└─────────────────┘     └─────────────────┘     └─────────────────┘   │
-           │                      │                                     │
-           │                      │             ┌─────────────────┐     │
-           │                      │             │  LINEAS_PEDIDO  │     │
-           │                      │             ├─────────────────┤     │
-           │                      │             │ id_linea (PK)   │     │
-           │                      │             │ id_pedido (FK)──┘     │
-           │                      │             │ id_producto (FK)─┐    │
-           │                      │             │ cantidad         │    │
-           │                      │             │ precio_unitario  │    │
-           │                      │             │ descuento_linea  │    │
-           │                      │             │ subtotal_linea   │    │
-           │                      │             └─────────────────┘    │
-           │                      │                                     │
-           │                      │             ┌─────────────────┐    │
-           │                      │             │    PRODUCTOS    │    │
-           │                      │             ├─────────────────┤    │
-           │                      │             │ id_producto (PK)│◄───┘
-           │                      │             │ id_categoria(FK)─┐
-           │                      │             │ codigo_sku (UQ) │ │
-           │                      │             │ nombre          │ │
-           │                      │             │ descripcion     │ │
-           │                      │             │ precio_base     │ │
-           │                      │             │ stock_actual    │ │
-           │                      │             │ stock_minimo    │ │
-           │                      │             │ peso_kg         │ │
-           │                      │             │ estado_producto │ │
-           │                      │             └─────────────────┘ │
-           │                      │                           │      │
-           │                      │             ┌─────────────────┐  │
-           │                      │             │   CATEGORIAS    │  │
-           │                      │             ├─────────────────┤  │
-           │                      │             │ id_categoria(PK)│◄─┘
-           │                      │             │ nombre          │
-           │                      │             │ descripcion     │
-           │                      │             │ id_padre (FK)   │
-           │                      │             └─────────────────┘
-           │                      │
-           │                      │             ┌─────────────────┐
-           │                      │             │  VALORACIONES   │
-           │                      │             ├─────────────────┤
-           └──────────────────────┤             │ id_valoracion(PK)│
-                                  │             │ id_cliente (FK)  │
-                                  │             │ id_producto (FK) │
-                                  │             │ id_pedido (FK)   │
-                                  │             │ puntuacion       │
-                                  │             │ comentario       │
-                                  │             │ fecha_valoracion │
-                                  │             │ verificada       │
-                                  │             └─────────────────┘
-                                  │
-                                  │             ┌─────────────────┐
-                                  │             │      PAGOS      │
-                                  │             ├─────────────────┤
-                                  │             │ id_pago (PK)    │
-                                  │             │ id_pedido (FK)──┘
-                                  │             │ importe_pagado  │
-                                  │             │ fecha_pago      │
-                                  │             │ metodo_pago_det │
-                                  │             │ estado_pago     │
-                                  │             │ referencia_externa│
-                                  └─────────────┘
+```mermaid
+erDiagram
+        CLIENTES ||--o{ DIRECCIONES : tiene
+        CLIENTES ||--o{ PEDIDOS : realiza
+        DIRECCIONES ||--o{ PEDIDOS : se_usa_en
+        PEDIDOS ||--o{ LINEAS_PEDIDO : contiene
+        PRODUCTOS ||--o{ LINEAS_PEDIDO : aparece_en
+        CATEGORIAS ||--o{ PRODUCTOS : clasifica
+        CATEGORIAS ||--o{ CATEGORIAS : agrupa
+        CLIENTES ||--o{ VALORACIONES : emite
+        PRODUCTOS ||--o{ VALORACIONES : recibe
+        PEDIDOS ||--o{ VALORACIONES : verifica
+        PEDIDOS ||--o{ PAGOS : registra
+
+        CLIENTES {
+                int id_cliente PK
+                string email
+                string password_hash
+                date fecha_registro
+        }
+        DIRECCIONES {
+                int id_direccion PK
+                int id_cliente FK
+                string tipo_direccion
+        }
+        PEDIDOS {
+                int id_pedido PK
+                int id_cliente FK
+                int id_direccion FK
+                number total_pedido
+                string estado_pedido
+        }
+        LINEAS_PEDIDO {
+                int id_linea PK
+                int id_pedido FK
+                int id_producto FK
+                number cantidad
+                number subtotal_linea
+        }
+        PRODUCTOS {
+                int id_producto PK
+                int id_categoria FK
+                string codigo_sku
+                number precio_base
+        }
+        CATEGORIAS {
+                int id_categoria PK
+                int id_padre FK
+                string nombre
+        }
+        VALORACIONES {
+                int id_valoracion PK
+                int id_cliente FK
+                int id_producto FK
+                int id_pedido FK
+        }
+        PAGOS {
+                int id_pago PK
+                int id_pedido FK
+                number importe_pagado
+                string estado_pago
+        }
 ```
 
 ### Restricciones a implementar
 
 - Los identificadores principales de `CLIENTES`, `DIRECCIONES`, `PEDIDOS`, `PRODUCTOS`, `CATEGORIAS`, `LINEAS_PEDIDO`, `VALORACIONES` y `PAGOS` serán numéricos, positivos y se generarán automáticamente.
-- El email de cada cliente no podrá repetirse y debe seguir formato válido.
 - El `password_hash` tendrá siempre 64 caracteres.
-- El teléfono debe contener entre 9 y 15 dígitos, permitiendo `+` como prefijo internacional.
 - La fecha de registro del cliente no podrá ser posterior a la fecha actual.
 - El estado de cuenta solo podrá ser: `ACTIVA`, `INACTIVA`, `SUSPENDIDA`, `BLOQUEADA` o `ELIMINADA`.
-- El código postal debe tener entre 3 y 10 caracteres alfanuméricos.
+- El código postal debe tener entre 3 y 10 caracteres.
 - El tipo de dirección solo podrá ser: `ENVIO`, `FACTURACION` o `AMBAS`.
 - Un cliente debe tener al menos una dirección de envío para poder realizar pedidos.
 - La fecha de pedido no podrá ser posterior a la fecha actual.
 - El estado de pedido solo podrá ser: `CARRITO`, `PENDIENTE_PAGO`, `PAGADO`, `EN_PREPARACION`, `ENVIADO`, `ENTREGADO`, `DEVUELTO` o `CANCELADO`.
 - El método de pago solo podrá ser: `TARJETA`, `PAYPAL`, `TRANSFERENCIA`, `CONTRAREEMBOLSO` o `CRIPTOMONEDA`.
 - El total del pedido nunca podrá ser negativo y debe ser igual a la suma de los subtotales de línea.
-- El número de seguimiento, si existe, debe tener entre 10 y 30 caracteres alfanuméricos.
-- El código SKU de cada producto no podrá repetirse y debe tener entre 5 y 20 caracteres alfanuméricos en mayúsculas.
+- El número de seguimiento, si existe, debe tener entre 10 y 30 caracteres.
+- El código SKU de cada producto no podrá repetirse y debe tener entre 5 y 20 caracteres.
 - El precio base de un producto nunca podrá ser negativo ni cero.
 - El stock actual no podrá ser negativo y el stock mínimo debe ser mayor o igual a 0.
 - El peso en kg debe ser mayor que 0 y no podrá superar 500.
@@ -334,8 +300,8 @@ En todos los ejercicios:
 
 1. Diseñar y crear todas las tablas del sistema de comercio electrónico.
 2. Definir claves primarias, únicas y foráneas, junto con las acciones `ON DELETE` exigidas.
-3. Añadir restricciones de formato, listas cerradas, rangos y campos calculables.
-4. Implementar triggers para validar pedidos, recalcular importes y controlar valoraciones verificadas.
+3. Añadir restricciones de longitud, listas cerradas, rangos y campos calculables simples.
+4. Señalar qué validaciones del enunciado quedarían fuera del alcance al usar solo DDL declarativo.
 5. Generar datos de prueba suficientes para comprobar inserciones válidas, rechazos y borrados.
 6. Identificar qué reglas exigen consultar otras tablas o agregados y, por tanto, no deben resolverse solo con `CHECK`.
 
@@ -343,99 +309,80 @@ En todos los ejercicios:
 
 ## Ejercicio 4. Sistema de Gestión Universitaria
 
-### Grafo relacional
+### Esquema relacional
 
-```plain
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│    CARRERAS     │     │   ASIGNATURAS   │     │ DEPARTAMENTOS   │
-├─────────────────┤     ├─────────────────┤     ├─────────────────┤
-│ id_carrera (PK) │◄────┤ id_carrera (FK) │     │ id_departamento │
-│ codigo (UQ)     │     │ id_departamento │◄────│ (PK)            │
-│ nombre          │     │    (FK)         │     │ codigo (UQ)     │
-│ duracion_anios  │     │ id_asignatura(PK)│    │ nombre          │
-│ creditos_total  │     │ codigo (UQ)     │     │ id_director (FK)│
-│ nivel           │     │ nombre          │     │ fecha_creacion  │
-│ estado          │     │ creditos_ects   │     │ presupuesto     │
-└─────────────────┘     │ curso           │     └─────────────────┘
-                        │ cuatrimestre    │              │
-                        │ tipo            │              │
-                        └─────────────────┘              │
-                                  │                      │
-                                  │             ┌─────────────────┐
-                                  │             │   PROFESORES    │
-                                  │             ├─────────────────┤
-                                  └─────────────┤ id_profesor (PK)│◄──┐
-                                                │ id_departamento │   │
-                                                │    (FK)         │   │
-                                                │ dni (UQ)        │   │
-                                                │ nombre          │   │
-                                                │ apellidos       │   │
-                                                │ email (UQ)      │   │
-                                                │ categoria       │   │
-                                                │ fecha_contratacion│  │
-                                                │ salario_anual   │   │
-                                                │ especialidad    │   │
-                                                └─────────────────┘   │
-                                                         │            │
-                                  ┌─────────────────┐    │            │
-                                  │   MATRICULAS    │    │            │
-                                  ├─────────────────┤    │            │
-                                  │ id_matricula(PK)│    │            │
-                                  │ id_estudiante(FK)┘   │            │
-                                  │ id_asignatura(FK)────┘            │
-                                  │ id_grupo (FK)─────┐               │
-                                  │ fecha_matricula   │               │
-                                  │ estado_matricula  │               │
-                                  │ nota_final        │               │
-                                  └─────────────────┘               │
-                                                                    │
-                        ┌─────────────────┐     ┌─────────────────┐ │
-                        │   ESTUDIANTES   │     │     GRUPOS      │ │
-                        ├─────────────────┤     ├─────────────────┤ │
-                        │ id_estudiante(PK)│◄───┤ id_grupo (PK)   │ │
-                        │ dni (UQ)        │     │ id_asignatura(FK)│ │
-                        │ nombre          │     │ id_profesor (FK)─┘ │
-                        │ apellidos       │     │ codigo_grupo    │
-                        │ email (UQ)      │     │ horario         │
-                        │ fecha_nacimiento│     │ aula            │
-                        │ fecha_ingreso   │     │ capacidad       │
-                        │ id_tutor (FK)───┘     │ estado_grupo    │
-                        │ promedio_global │     └─────────────────┘
-                        │ estado_estudiante│
-                        └─────────────────┘
-                                    │
-                        ┌─────────────────┐
-                        │ CALIFICACIONES  │
-                        ├─────────────────┤
-                        │ id_calificacion │
-                        │    (PK)         │
-                        │ id_matricula(FK)│
-                        │ id_evaluacion(FK)│
-                        │ nota            │
-                        │ comentario      │
-                        └─────────────────┘
-                                    │
-                        ┌─────────────────┐
-                        │  EVALUACIONES   │
-                        ├─────────────────┤
-                        │ id_evaluacion   │
-                        │    (PK)         │
-                        │ id_asignatura(FK)│
-                        │ tipo_evaluacion │
-                        │ peso_porcentaje │
-                        │ fecha_evaluacion│
-                        │ descripcion     │
-                        └─────────────────┘
+```mermaid
+erDiagram
+        CARRERAS ||--o{ ASIGNATURAS : contiene
+        DEPARTAMENTOS ||--o{ ASIGNATURAS : coordina
+        DEPARTAMENTOS ||--o{ PROFESORES : integra
+        PROFESORES o|--|| DEPARTAMENTOS : dirige
+        ASIGNATURAS ||--o{ GRUPOS : oferta
+        PROFESORES ||--o{ GRUPOS : imparte
+        ESTUDIANTES ||--o{ MATRICULAS : realiza
+        ASIGNATURAS ||--o{ MATRICULAS : recibe
+        GRUPOS ||--o{ MATRICULAS : organiza
+        ESTUDIANTES ||--o{ ESTUDIANTES : tutoriza
+        MATRICULAS ||--o{ CALIFICACIONES : genera
+        EVALUACIONES ||--o{ CALIFICACIONES : compone
+        ASIGNATURAS ||--o{ EVALUACIONES : define
+
+        CARRERAS {
+                int id_carrera PK
+                string codigo
+                number duracion_anios
+        }
+        DEPARTAMENTOS {
+                int id_departamento PK
+                string codigo
+                int id_director FK
+        }
+        ASIGNATURAS {
+                int id_asignatura PK
+                int id_carrera FK
+                int id_departamento FK
+                number creditos_ects
+        }
+        PROFESORES {
+                int id_profesor PK
+                int id_departamento FK
+                string categoria
+        }
+        ESTUDIANTES {
+                int id_estudiante PK
+                int id_tutor FK
+                date fecha_ingreso
+        }
+        GRUPOS {
+                int id_grupo PK
+                int id_asignatura FK
+                int id_profesor FK
+        }
+        MATRICULAS {
+                int id_matricula PK
+                int id_estudiante FK
+                int id_asignatura FK
+                int id_grupo FK
+        }
+        EVALUACIONES {
+                int id_evaluacion PK
+                int id_asignatura FK
+                number peso_porcentaje
+        }
+        CALIFICACIONES {
+                int id_calificacion PK
+                int id_matricula FK
+                int id_evaluacion FK
+                number nota
+        }
 ```
 
 ### Restricciones a implementar
 
 - Los identificadores principales de `CARRERAS`, `ASIGNATURAS`, `DEPARTAMENTOS`, `PROFESORES`, `ESTUDIANTES`, `GRUPOS`, `MATRICULAS`, `EVALUACIONES` y `CALIFICACIONES` serán numéricos, positivos y se generarán automáticamente.
-- El código de cada carrera tendrá 4 caracteres alfanuméricos mayúsculas y no podrá repetirse.
-- El código de cada asignatura tendrá entre 5 y 10 caracteres alfanuméricos y no podrá repetirse.
-- El código de cada departamento tendrá 3 caracteres alfanuméricos mayúsculas y no podrá repetirse.
-- El DNI de profesores y estudiantes seguirá formato español válido, no podrá repetirse dentro de cada tabla ni entre tablas.
-- El email de profesores y estudiantes no podrá repetirse dentro de cada tabla ni entre tablas, y debe contener el dominio universitario `@universidad.es`.
+- El código de cada carrera tendrá 4 caracteres y no podrá repetirse.
+- El código de cada asignatura tendrá entre 5 y 10 caracteres y no podrá repetirse.
+- El código de cada departamento tendrá 3 caracteres y no podrá repetirse.
 - La duración de la carrera debe estar entre 1 y 6 años.
 - Los créditos totales de una carrera deben estar entre 60 y 360 ECTS.
 - El nivel de la carrera solo podrá ser: `GRADO`, `MASTER` o `DOCTORADO`.
@@ -471,138 +418,94 @@ En todos los ejercicios:
 1. Crear el esquema completo de la base de datos universitaria.
 2. Definir restricciones de entidad, dominio, unicidad y referencia.
 3. Diseñar los mecanismos necesarios para controlar reglas intertabla y agregadas.
-4. Implementar triggers para evitar duplicidad de DNI y email entre estudiantes y profesores, controlar límites de matrícula y recalcular promedios.
+4. Señalar qué controles intertabla y agregados quedarían fuera del alcance al usar solo DDL declarativo.
 5. Añadir ejemplos de inserción, actualización y borrado que prueben las reglas más complejas.
-6. Explicar qué reglas serían especialmente delicadas por mutating table en Oracle y cómo las abordarías.
+6. Explicar qué reglas serían especialmente delicadas de resolver solo con DDL declarativo en Oracle y cómo las abordarías en una versión ampliada.
 
 ---
 
 ## Ejercicio 5. Sistema de Gestión de Proyectos de Construcción
 
-### Grafo relacional
+### Esquema relacional
 
-```plain
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│    EMPRESAS     │     │    PROYECTOS    │     │    CLIENTES     │
-├─────────────────┤     ├─────────────────┤     ├─────────────────┤
-│ id_empresa (PK) │◄────┤ id_empresa (FK) │     │ id_cliente (PK) │
-│ cif (UQ)        │     │ id_cliente (FK)─┘─────┤ cif_nif (UQ)    │
-│ razon_social    │     │ id_proyecto (PK)│     │ razon_social    │
-│ direccion_fiscal│     │ codigo_proyecto │     │ direccion       │
-│ telefono        │     │    (UQ)         │     │ telefono        │
-│ email           │     │ nombre          │     │ email           │
-│ sector          │     │ descripcion     │     │ tipo_cliente    │
-│ capacidad_constr│     │ ubicacion       │     │ fecha_alta      │
-│    (m2_anio)    │     │ presupuesto_base│     │ credito_aprobado│
-│ fecha_fundacion │     │ fecha_inicio    │     └─────────────────┘
-│ estado_empresa  │     │ fecha_fin_prev  │              │
-└─────────────────┘     │ fecha_fin_real  │              │
-                        │ estado_proyecto │              │
-                        │ porcentaje_ejec │              │
-                        └─────────────────┘              │
-                                  │                      │
-                                  │             ┌─────────────────┐
-                                  │             │ CERTIFICACIONES │
-                                  │             ├─────────────────┤
-                                  │             │ id_certificacion│
-                                  │             │    (PK)         │
-                                  │             │ id_proyecto (FK)│
-                                  └─────────────┤ id_empresa_cert │
-                                                │    (FK)         │
-                                                │ numero_certif   │
-                                                │ fecha_certif    │
-                                                │ importe_certif  │
-                                                │ tipo_certif     │
-                                                │ estado_certif   │
-                                                └─────────────────┘
-                                                        │
-                        ┌─────────────────┐             │
-                        │  TRABAJADORES   │             │
-                        ├─────────────────┤             │
-                        │ id_trabajador   │             │
-                        │    (PK)         │             │
-                        │ id_empresa (FK)─┘             │
-                        │ dni (UQ)        │             │
-                        │ nombre          │             │
-                        │ apellidos       │             │
-                        │ categoria_prof  │             │
-                        │ salario_mensual │             │
-                        │ fecha_alta      │             │
-                        │ fecha_baja      │             │
-                        │ id_capataz (FK) │             │
-                        │ especialidad    │             │
-                        └─────────────────┘             │
-                                  │                    │
-                        ┌─────────────────┐            │
-                        │  ASIGNACIONES   │            │
-                        ├─────────────────┤            │
-                        │ id_asignacion   │            │
-                        │    (PK)         │            │
-                        │ id_proyecto (FK)│            │
-                        │ id_trabajador(FK)│           │
-                        │ fecha_inicio_asig│           │
-                        │ fecha_fin_asig  │            │
-                        │ porcentaje_dedic│            │
-                        │ rol_en_proyecto │            │
-                        └─────────────────┘            │
-                                  │                    │
-                        ┌─────────────────┐            │
-                        │     PARTES      │            │
-                        ├─────────────────┤            │
-                        │ id_parte (PK)   │            │
-                        │ id_asignacion(FK)┘           │
-                        │ fecha_parte     │            │
-                        │ horas_normales  │            │
-                        │ horas_extras    │            │
-                        │ horas_nocturnas │            │
-                        │ descripcion     │            │
-                        │ estado_parte    │            │
-                        └─────────────────┘            │
-                                                       │
-                        ┌─────────────────┐            │
-                        │   MATERIALES    │            │
-                        ├─────────────────┤            │
-                        │ id_material (PK)│            │
-                        │ codigo_sku (UQ) │            │
-                        │ nombre          │            │
-                        │ unidad_medida   │            │
-                        │ precio_unitario │            │
-                        │ stock_actual    │            │
-                        │ id_proveedor(FK)┘            │
-                        └─────────────────┘            │
-                                                       │
-                        ┌─────────────────┐            │
-                        │    CONSUMOS     │            │
-                        ├─────────────────┤            │
-                        │ id_consumo (PK) │            │
-                        │ id_proyecto (FK)│            │
-                        │ id_material (FK)│            │
-                        │ cantidad        │            │
-                        │ fecha_consumo   │            │
-                        │ coste_total     │            │
-                        └─────────────────┘            │
-                                                       │
-                        ┌─────────────────┐            │
-                        │   PROVEEDORES   │◄───────────┘
-                        ├─────────────────┤
-                        │ id_proveedor(PK)│
-                        │ cif (UQ)        │
-                        │ razon_social    │
-                        │ telefono        │
-                        │ email           │
-                        │ especialidad    │
-                        │ estado_proveedor│
-                        └─────────────────┘
+```mermaid
+erDiagram
+        EMPRESAS ||--o{ PROYECTOS : ejecuta
+        CLIENTES ||--o{ PROYECTOS : encarga
+        PROYECTOS ||--o{ CERTIFICACIONES : genera
+        EMPRESAS ||--o{ TRABAJADORES : contrata
+        TRABAJADORES ||--o{ TRABAJADORES : supervisa
+        PROYECTOS ||--o{ ASIGNACIONES : organiza
+        TRABAJADORES ||--o{ ASIGNACIONES : participa
+        ASIGNACIONES ||--o{ PARTES : produce
+        PROVEEDORES ||--o{ MATERIALES : suministra
+        MATERIALES ||--o{ CONSUMOS : interviene
+        PROYECTOS ||--o{ CONSUMOS : registra
+
+        EMPRESAS {
+                int id_empresa PK
+                string razon_social
+                string sector
+        }
+        CLIENTES {
+                int id_cliente PK
+                string razon_social
+                string tipo_cliente
+        }
+        PROYECTOS {
+                int id_proyecto PK
+                int id_empresa FK
+                int id_cliente FK
+                number presupuesto_base
+                string estado_proyecto
+        }
+        CERTIFICACIONES {
+                int id_certificacion PK
+                int id_proyecto FK
+                int id_empresa_cert FK
+                number importe_certif
+        }
+        TRABAJADORES {
+                int id_trabajador PK
+                int id_empresa FK
+                int id_capataz FK
+                string categoria_prof
+        }
+        ASIGNACIONES {
+                int id_asignacion PK
+                int id_proyecto FK
+                int id_trabajador FK
+                number porcentaje_dedic
+        }
+        PARTES {
+                int id_parte PK
+                int id_asignacion FK
+                date fecha_parte
+                string estado_parte
+        }
+        PROVEEDORES {
+                int id_proveedor PK
+                string razon_social
+                string estado_proveedor
+        }
+        MATERIALES {
+                int id_material PK
+                int id_proveedor FK
+                string codigo_sku
+                number precio_unitario
+        }
+        CONSUMOS {
+                int id_consumo PK
+                int id_proyecto FK
+                int id_material FK
+                number coste_total
+        }
 ```
 
 ### Restricciones a implementar
 
 - Los identificadores principales de `EMPRESAS`, `PROYECTOS`, `CLIENTES`, `TRABAJADORES`, `ASIGNACIONES`, `PARTES`, `MATERIALES`, `CONSUMOS`, `PROVEEDORES` y `CERTIFICACIONES` serán numéricos, positivos y se generarán automáticamente.
-- El CIF de empresas y proveedores seguirá formato español válido y no podrá repetirse.
-- El CIF o NIF de clientes seguirá formato válido español y no podrá repetirse.
-- El código de proyecto tendrá formato `PRJ-AAAA-NNNN` y no podrá repetirse.
-- El email de todas las entidades debe contener `@` y dominio válido con al menos un punto y extensión de 2 a 6 caracteres.
-- El teléfono debe contener entre 9 y 15 dígitos, permitiendo `+` como prefijo.
+- El código de proyecto no podrá repetirse.
 - La capacidad de construcción debe ser mayor que 0 y no superar 1.000.000 m² por año.
 - El sector de la empresa solo podrá ser: `EDIFICACION`, `OBRA_CIVIL`, `INDUSTRIAL`, `REHABILITACION` o `INSTALACIONES`.
 - La fecha de fundación no podrá ser posterior a la fecha actual.
@@ -629,7 +532,7 @@ En todos los ejercicios:
 - Las horas nocturnas deben estar entre 0 y 8.
 - La suma de horas normales, extras y nocturnas no podrá superar 12 por día.
 - El estado del parte solo podrá ser: `BORRADOR`, `PENDIENTE`, `VALIDADO`, `RECHAZADO` o `FACTURADO`.
-- El código SKU del material tendrá entre 5 y 20 caracteres alfanuméricos mayúsculas y no podrá repetirse.
+- El código SKU del material tendrá entre 5 y 20 caracteres y no podrá repetirse.
 - La unidad de medida solo podrá ser: `UNIDAD`, `METRO`, `METRO_CUADRADO`, `METRO_CUBICO`, `KILOGRAMO`, `LITRO`, `HORA` o `JORNADA`.
 - El precio unitario debe ser mayor que 0.
 - El stock actual no podrá ser negativo.
@@ -650,8 +553,8 @@ En todos los ejercicios:
 
 1. Crear todas las tablas del sistema de gestión de proyectos de construcción.
 2. Definir claves primarias, alternativas y foráneas con las políticas de borrado adecuadas.
-3. Añadir restricciones de formato, rango, listas cerradas y valores por defecto donde proceda.
-4. Implementar triggers para controlar solapes de asignaciones, cálculo de costes y coherencia temporal del proyecto.
+3. Añadir restricciones de longitud, rango, listas cerradas y valores por defecto donde proceda.
+4. Señalar qué reglas del enunciado quedarían fuera del alcance al usar solo DDL declarativo.
 5. Proponer un conjunto de pruebas mínimo que incluya inserciones correctas, errores de dominio y errores por integridad referencial.
 6. Indicar qué reglas podrían resolverse con procedimientos o paquetes auxiliares si el sistema creciera en complejidad.
 
@@ -664,7 +567,7 @@ Para cada ejercicio, se recomienda seguir este orden de trabajo:
 1. Crear primero las tablas sin todas las dependencias circulares más complejas.
 2. Añadir después claves foráneas, restricciones `CHECK`, `UNIQUE` y acciones `ON DELETE`.
 3. Incorporar secuencias o columnas identidad para claves numéricas.
-4. Implementar los triggers estrictamente necesarios.
+4. Documentar qué reglas del enunciado se dejan fuera por no resolverse solo con DDL declarativo.
 5. Preparar un script final de pruebas con inserciones, actualizaciones, borrados y consultas de validación.
 
 ---
