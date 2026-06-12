@@ -563,10 +563,3 @@ ORDER BY C.NOMBRE_CAT;
 </details>
 
 ---
-
-## Notas para el profesorado
-
-- Los ejercicios están pensados para resolverse con la sintaxis estándar de SQL (`SELECT`, `FROM`, `WHERE`, `JOIN`, `GROUP BY`, `HAVING`, `ORDER BY`, subconsultas y `CASE WHEN`).
-- Se ha omitido el uso de funciones específicas de Oracle como `NVL`, `DECODE`, `TO_CHAR`, etc. Las soluciones emplean sintaxis estándar SQL (`COALESCE`, `EXTRACT`, etc.).
-- El esquema es autocontenido: los alumnos pueden crear las tablas, insertar los datos y practicar directamente en DBeaver.
-- Se recomienda trabajar los ejercicios por niveles, resolviendo primero los básicos y avanzando progresivamente hacia los complejos.
